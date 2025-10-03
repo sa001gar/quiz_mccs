@@ -157,7 +157,9 @@ export async function submitQuiz(attemptId: string) {
     }
   }
 
-  const passed = score >= attempt.passing_score
+  // Enforce 60% pass criteria irrespective of stored passing_score
+  const requiredToPass = Math.ceil((attempt.total_marks * 60) / 100)
+  const passed = score >= requiredToPass
   const timeTaken = Math.floor((new Date().getTime() - new Date(attempt.started_at).getTime()) / 1000)
 
   // Update attempt

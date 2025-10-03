@@ -156,6 +156,11 @@ CREATE POLICY "Students can view their own certificates"
   ON public.certificates FOR SELECT
   USING (auth.uid() = student_id);
 
+-- Allow students to insert their own certificate after passing
+CREATE POLICY "Students can insert their own certificates"
+  ON public.certificates FOR INSERT
+  WITH CHECK (auth.uid() = student_id);
+
 CREATE POLICY "Admins can manage certificates"
   ON public.certificates FOR ALL
   USING (

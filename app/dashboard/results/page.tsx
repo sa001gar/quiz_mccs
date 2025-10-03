@@ -1,39 +1,50 @@
-import { createClient } from "@/lib/supabase/server"
+"use client"
+
+import { useEffect, useMemo, useState } from "react"
+import { createClient } from "@/lib/supabase/client"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { Award, FileText, Download } from "lucide-react"
+import { useSearchParams } from "next/navigation"
 
-export default async function ResultsPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ score?: string; total?: string; passed?: string }>
-}) {
-  const supabase = await createClient()
+export default function ResultsPage() {
+  const searchParams = useSearchParams()
+  const [attempts, setAttempts] = useState<any[] | null>(null)
+  const [loading, setLoading] = useState(true)
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  const showSuccess = useMemo(() => {
+    const score = searchParams.get("score")
+    const total = searchParams.get("total")
+    const passed = searchParams.get("passed")
+    return !!(score && total && passed)
+  }, [searchParams])
 
-  // Await searchParams
-  const params = await searchParams
-
-  // Get all attempts
-  const { data: attempts } = await supabase
-    .from("quiz_attempts")
-    .select(
-      `
-      *,
-      quiz:quizzes(title, total_marks, passing_score),
-      certificate:certificates(certificate_number, issued_at)
-    `,
-    )
-    .eq("student_id", user?.id)
-    .order("submitted_at", { ascending: false })
-
-  // Show success message if just completed
-  const showSuccess = params.score && params.total && params.passed
+  useEffect(() => {
+    let isMounted = true
+    const supabase = createClient()
+    async function load() {
+      try {
+        const {
+          data: { user },
+        } = await supabase.auth.getUser()
+        const { data } = await supabase
+          .from("quiz_attempts")
+          .select(`*, quiz:quizzes(title, total_marks, passing_score), certificate:certificates(certificate_number, issued_at)`) 
+          .eq("student_id", user?.id)
+          .order("submitted_at", { ascending: false })
+        if (!isMounted) return
+        setAttempts(data || [])
+      } finally {
+        if (isMounted) setLoading(false)
+      }
+    }
+    load()
+    return () => {
+      isMounted = false
+    }
+  }, [])
 
   return (
     <div className="space-y-6">
@@ -47,11 +58,11 @@ export default async function ResultsPage({
           <CardContent>
             <div>
               <h3 className="text-lg font-semibold text-green-900 dark:text-green-100">
-                {params.passed === "true" ? "Congratulations!" : "Quiz Completed"}
+                {searchParams.get("passed") === "true" ? "Congratulations!" : "Quiz Completed"}
               </h3>
               <p className="text-sm text-green-800 dark:text-green-200">
-                You scored {params.score} out of {params.total} marks.{" "}
-                {params.passed === "true" && "A certificate has been generated for you!"}
+                You scored {searchParams.get("score")} out of {searchParams.get("total")} marks.
+                {searchParams.get("passed") === "true" && " A certificate has been generated for you!"}
               </p>
             </div>
           </CardContent>
@@ -59,7 +70,18 @@ export default async function ResultsPage({
       )}
 
       <div className="space-y-4">
-        {attempts && attempts.length > 0 ? (
+        {loading ? (
+          Array.from({ length: 3 }).map((_, i) => (
+            <Card key={i}>
+              <CardHeader>
+                <div className="h-5 w-1/2 animate-pulse rounded bg-muted" />
+              </CardHeader>
+              <CardContent>
+                <div className="h-4 w-full animate-pulse rounded bg-muted" />
+              </CardContent>
+            </Card>
+          ))
+        ) : attempts && attempts.length > 0 ? (
           attempts.map((attempt: any) => {
             const isPassed = attempt.passed
             const hasCertificate = attempt.certificate && attempt.certificate.length > 0
@@ -90,7 +112,7 @@ export default async function ResultsPage({
                       </div>
                       <div className="space-y-1">
                         <p className="text-sm text-muted-foreground">Passing Score</p>
-                        <p className="text-2xl font-bold">{attempt.passing_score}</p>
+                        <p className="text-2xl font-bold">{Math.ceil((attempt.total_marks * 60) / 100)}</p>
                       </div>
                       <div className="space-y-1">
                         <p className="text-sm text-muted-foreground">Time Taken</p>

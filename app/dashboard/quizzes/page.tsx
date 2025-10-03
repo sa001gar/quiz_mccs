@@ -1,30 +1,70 @@
-import { createClient } from "@/lib/supabase/server"
+"use client"
+
+import { useEffect, useMemo, useState } from "react"
+import { createClient } from "@/lib/supabase/client"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { Clock, FileText, Award, Calendar } from "lucide-react"
 
-export default async function QuizzesPage() {
-  const supabase = await createClient()
+type Quiz = {
+  id: string
+  title: string
+  description: string | null
+  duration_minutes: number
+  total_marks: number
+  passing_score: number
+  scheduled_start: string | null
+  scheduled_end: string | null
+  is_active: boolean
+}
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+type Attempt = {
+  quiz_id: string
+  status: string
+}
 
-  // Get all active quizzes
-  const { data: quizzes } = await supabase
-    .from("quizzes")
-    .select("*")
-    .eq("is_active", true)
-    .order("created_at", { ascending: false })
+export default function QuizzesPage() {
+  const [quizzes, setQuizzes] = useState<Quiz[] | null>(null)
+  const [attempts, setAttempts] = useState<Attempt[] | null>(null)
+  const [loading, setLoading] = useState(true)
 
-  // Get student's attempts
-  const { data: attempts } = await supabase.from("quiz_attempts").select("quiz_id, status").eq("student_id", user?.id)
+  useEffect(() => {
+    let isMounted = true
+    const supabase = createClient()
+    async function fetchData() {
+      try {
+        const {
+          data: { user },
+        } = await supabase.auth.getUser()
 
-  const attemptMap = new Map(attempts?.map((a) => [a.quiz_id, a.status]) || [])
+        const [quizzesRes, attemptsRes] = await Promise.all([
+          supabase
+            .from("quizzes")
+            .select("*")
+            .eq("is_active", true)
+            .order("created_at", { ascending: false }),
+          user
+            ? supabase.from("quiz_attempts").select("quiz_id, status").eq("student_id", user.id)
+            : Promise.resolve({ data: null }),
+        ])
 
-  const now = new Date()
+        if (!isMounted) return
+        setQuizzes((quizzesRes as any).data || [])
+        setAttempts((attemptsRes as any).data || [])
+      } finally {
+        if (isMounted) setLoading(false)
+      }
+    }
+    fetchData()
+    return () => {
+      isMounted = false
+    }
+  }, [])
+
+  const attemptMap = useMemo(() => new Map((attempts || []).map((a) => [a.quiz_id, a.status])), [attempts])
+  const now = useMemo(() => new Date(), [])
 
   return (
     <div className="space-y-6">
@@ -34,7 +74,24 @@ export default async function QuizzesPage() {
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {quizzes && quizzes.length > 0 ? (
+        {loading ? (
+          Array.from({ length: 6 }).map((_, i) => (
+            <Card key={i}>
+              <CardHeader>
+                <div className="space-y-2">
+                  <div className="h-5 w-1/2 animate-pulse rounded bg-muted" />
+                  <div className="h-4 w-3/4 animate-pulse rounded bg-muted" />
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2">
+                  <div className="h-4 w-full animate-pulse rounded bg-muted" />
+                  <div className="h-4 w-2/3 animate-pulse rounded bg-muted" />
+                </div>
+              </CardContent>
+            </Card>
+          ))
+        ) : quizzes && quizzes.length > 0 ? (
           quizzes.map((quiz) => {
             const attemptStatus = attemptMap.get(quiz.id)
             const isCompleted = attemptStatus === "submitted"

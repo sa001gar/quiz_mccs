@@ -7,12 +7,35 @@ import { Clock } from "lucide-react"
 interface QuizCountdownProps {
   scheduledStart: string
   scheduledEnd?: string | null
+  timeZone?: string // display timezone, defaults to Asia/Kolkata
+  showUtcReference?: boolean // optionally show UTC alongside display timezone
+  use24Hour?: boolean // use 24-hour clock
 }
 
-export function QuizCountdown({ scheduledStart, scheduledEnd }: QuizCountdownProps) {
+export function QuizCountdown({ scheduledStart, scheduledEnd, timeZone = "Asia/Kolkata", showUtcReference = false, use24Hour = false }: QuizCountdownProps) {
   const [timeUntilStart, setTimeUntilStart] = useState<string>("")
   const [isAvailable, setIsAvailable] = useState(false)
   const [hasEnded, setHasEnded] = useState(false)
+
+  // Stable, explicit time formatters
+  const fmtLocalTz = new Intl.DateTimeFormat(undefined, {
+    timeZone,
+    year: "numeric",
+    month: "short",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: !use24Hour,
+  })
+  const fmtUTC = new Intl.DateTimeFormat(undefined, {
+    timeZone: "UTC",
+    year: "numeric",
+    month: "short",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: !use24Hour,
+  })
 
   useEffect(() => {
     const calculateTime = () => {
@@ -88,7 +111,7 @@ export function QuizCountdown({ scheduledStart, scheduledEnd }: QuizCountdownPro
             <p className="font-medium text-green-900 dark:text-green-100">Quiz is Now Available</p>
             <p className="text-sm text-green-800 dark:text-green-200">
               {scheduledEnd
-                ? `You can start the quiz now. Closes on ${new Date(scheduledEnd).toLocaleString()}`
+                ? `You can start the quiz now. Closes on ${fmtLocalTz.format(new Date(scheduledEnd))} ${timeZoneLabel(timeZone)}${showUtcReference ? ` (${fmtUTC.format(new Date(scheduledEnd))} UTC)` : ""}`
                 : "You can start the quiz now"}
             </p>
           </div>
@@ -105,10 +128,29 @@ export function QuizCountdown({ scheduledStart, scheduledEnd }: QuizCountdownPro
           <p className="font-medium text-blue-900 dark:text-blue-100">Quiz Starts In</p>
           <p className="text-3xl font-bold text-blue-900 dark:text-blue-100">{timeUntilStart}</p>
           <p className="text-sm text-blue-800 dark:text-blue-200">
-            Scheduled for {new Date(scheduledStart).toLocaleString()}
+            Scheduled for {fmtLocalTz.format(new Date(scheduledStart))} {timeZoneLabel(timeZone)}
+            {showUtcReference ? (
+              <>
+                {" "}
+                <span className="text-xs text-muted-foreground">({fmtUTC.format(new Date(scheduledStart))} UTC)</span>
+              </>
+            ) : null}
           </p>
+          {scheduledEnd ? (
+            <p className="text-xs text-muted-foreground">
+              Closes on {fmtLocalTz.format(new Date(scheduledEnd))} {timeZoneLabel(timeZone)}
+              {showUtcReference ? ` (${fmtUTC.format(new Date(scheduledEnd))} UTC)` : ""}
+            </p>
+          ) : null}
         </div>
       </CardContent>
     </Card>
   )
+}
+
+function timeZoneLabel(tz: string): string {
+  // Simple mapping for common zones; fallback to tz id
+  if (tz === "Asia/Kolkata") return "IST"
+  if (tz === "UTC") return "UTC"
+  return tz
 }
