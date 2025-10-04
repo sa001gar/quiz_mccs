@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useState, Suspense } from "react"
 import { createClient } from "@/lib/supabase/client"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -9,7 +9,8 @@ import Link from "next/link"
 import { Award, FileText, Download } from "lucide-react"
 import { useSearchParams } from "next/navigation"
 
-export default function ResultsPage() {
+// Component that uses useSearchParams
+function ResultsContent() {
   const searchParams = useSearchParams()
   const [attempts, setAttempts] = useState<any[] | null>(null)
   const [loading, setLoading] = useState(true)
@@ -157,5 +158,38 @@ export default function ResultsPage() {
         )}
       </div>
     </div>
+  )
+}
+
+// Loading component for Suspense fallback
+function ResultsLoading() {
+  return (
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-3xl font-bold tracking-tight">My Results</h1>
+        <p className="text-muted-foreground">View your quiz attempts and certificates</p>
+      </div>
+      <div className="space-y-4">
+        {Array.from({ length: 3 }).map((_, i) => (
+          <Card key={i}>
+            <CardHeader>
+              <div className="h-5 w-1/2 animate-pulse rounded bg-muted" />
+            </CardHeader>
+            <CardContent>
+              <div className="h-4 w-full animate-pulse rounded bg-muted" />
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+// Main page component with Suspense boundary
+export default function ResultsPage() {
+  return (
+    <Suspense fallback={<ResultsLoading />}>
+      <ResultsContent />
+    </Suspense>
   )
 }

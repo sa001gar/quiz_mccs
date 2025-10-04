@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useMemo, useState, useCallback, useRef } from "react"
+import { useEffect, useMemo, useState, useCallback, useRef, Suspense } from "react"
 import { createClient } from "@/lib/supabase/client"
 import { useParams, useRouter } from "next/navigation"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -54,7 +54,8 @@ type Attempt = {
   started_at: string
 }
 
-export default function TakeQuizPage() {
+// Component that uses useParams
+function TakeQuizContent() {
   const params = useParams<{ id: string }>()
   const router = useRouter()
   const [quiz, setQuiz] = useState<Quiz | null>(null)
@@ -571,5 +572,26 @@ export default function TakeQuizPage() {
         </div>
       )}
     </div>
+  )
+}
+
+// Loading component for Suspense fallback
+function TakeQuizLoading() {
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-100 via-purple-100 to-indigo-200 flex items-center justify-center">
+      <div className="text-slate-800 text-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-2 border-slate-800 border-t-transparent mx-auto mb-4"></div>
+        <p>Loading quiz...</p>
+      </div>
+    </div>
+  )
+}
+
+// Main page component with Suspense boundary
+export default function TakeQuizPage() {
+  return (
+    <Suspense fallback={<TakeQuizLoading />}>
+      <TakeQuizContent />
+    </Suspense>
   )
 }

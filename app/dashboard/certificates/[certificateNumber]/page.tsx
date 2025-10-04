@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, Suspense } from "react"
 import { createClient } from "@/lib/supabase/client"
 import { useParams, useRouter } from "next/navigation"
 import { CertificatePDF } from "@/components/student/certificate-pdf"
@@ -9,7 +9,8 @@ import { Button } from "@/components/ui/button"
 import { ArrowLeft, Award, Calendar, User, BookOpen } from "lucide-react"
 import Link from "next/link"
 
-export default function CertificatePage() {
+// Component that uses useParams
+function CertificateContent() {
   const params = useParams<{ certificateNumber: string }>()
   const router = useRouter()
   const [certificate, setCertificate] = useState<any | null>(null)
@@ -137,5 +138,26 @@ export default function CertificatePage() {
         </div>
       </div>
     </div>
+  )
+}
+
+// Loading component for Suspense fallback
+function CertificateLoading() {
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-100 via-purple-100 to-indigo-200 flex items-center justify-center">
+      <div className="text-slate-800 text-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-2 border-slate-800 border-t-transparent mx-auto mb-4"></div>
+        <p>Loading certificate...</p>
+      </div>
+    </div>
+  )
+}
+
+// Main page component with Suspense boundary
+export default function CertificatePage() {
+  return (
+    <Suspense fallback={<CertificateLoading />}>
+      <CertificateContent />
+    </Suspense>
   )
 }
