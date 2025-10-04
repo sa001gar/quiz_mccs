@@ -5,10 +5,11 @@ import { Button } from "@/components/ui/button"
 import { ArrowLeft } from "lucide-react"
 import Link from "next/link"
 
-export default async function NewQuestionPage({ params }: { params: { id: string } }) {
+export default async function NewQuestionPage({ params }: { params: Promise<{ id: string }> }) {
+  const resolvedParams = await params
   const supabase = await createClient()
 
-  const { data: quiz } = await supabase.from("quizzes").select("*").eq("id", params.id).single()
+  const { data: quiz } = await supabase.from("quizzes").select("*").eq("id", resolvedParams.id).single()
 
   if (!quiz) {
     notFound()
@@ -17,7 +18,7 @@ export default async function NewQuestionPage({ params }: { params: { id: string
   return (
     <div className="mx-auto max-w-2xl space-y-6">
       <div className="flex items-center gap-4">
-        <Link href={`/admin/quizzes/${params.id}`}>
+        <Link href={`/admin/quizzes/${resolvedParams.id}`}>
           <Button variant="ghost" size="sm" className="gap-2">
             <ArrowLeft className="h-4 w-4" />
             Back to Quiz
@@ -30,7 +31,7 @@ export default async function NewQuestionPage({ params }: { params: { id: string
         <p className="text-muted-foreground">Create a new question for {quiz.title}</p>
       </div>
 
-      <QuestionForm quizId={params.id} />
+      <QuestionForm quizId={resolvedParams.id} />
     </div>
   )
 }

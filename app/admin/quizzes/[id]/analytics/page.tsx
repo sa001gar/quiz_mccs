@@ -6,10 +6,11 @@ import { notFound } from "next/navigation"
 import Link from "next/link"
 import { ArrowLeft, TrendingUp, Users, Clock, Award } from "lucide-react"
 
-export default async function QuizAnalyticsPage({ params }: { params: { id: string } }) {
+export default async function QuizAnalyticsPage({ params }: { params: Promise<{ id: string }> }) {
+  const resolvedParams = await params
   const supabase = await createClient()
 
-  const { data: quiz } = await supabase.from("quizzes").select("*").eq("id", params.id).single()
+  const { data: quiz } = await supabase.from("quizzes").select("*").eq("id", resolvedParams.id).single()
 
   if (!quiz) {
     notFound()
@@ -24,7 +25,7 @@ export default async function QuizAnalyticsPage({ params }: { params: { id: stri
       student:profiles(full_name, roll_number)
     `,
     )
-    .eq("quiz_id", params.id)
+    .eq("quiz_id", resolvedParams.id)
     .eq("status", "submitted")
 
   // Calculate statistics
@@ -41,7 +42,7 @@ export default async function QuizAnalyticsPage({ params }: { params: { id: stri
   const { data: questions } = await supabase
     .from("questions")
     .select("id, question_text, marks")
-    .eq("quiz_id", params.id)
+    .eq("quiz_id", resolvedParams.id)
     .order("order_number")
 
   const questionAnalytics = await Promise.all(
@@ -95,7 +96,7 @@ export default async function QuizAnalyticsPage({ params }: { params: { id: stri
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-4">
-        <Link href={`/admin/quizzes/${params.id}`}>
+        <Link href={`/admin/quizzes/${resolvedParams.id}`}>
           <Button variant="ghost" size="sm" className="gap-2">
             <ArrowLeft className="h-4 w-4" />
             Back

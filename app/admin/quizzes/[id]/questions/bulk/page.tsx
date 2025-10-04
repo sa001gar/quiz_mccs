@@ -1,6 +1,8 @@
 import { BulkQuestionForm } from "@/components/admin/bulk-question-form"
 
-export default function BulkAddQuestionsPage({ params }: { params: { id: string } }) {
+export default async function BulkAddQuestionsPage({ params }: { params: Promise<{ id: string }> }) {
+  const resolvedParams = await params
+  
   return (
     <div className="mx-auto max-w-4xl space-y-6 py-6">
       <div>
@@ -8,7 +10,7 @@ export default function BulkAddQuestionsPage({ params }: { params: { id: string 
         <p className="text-muted-foreground">Add questions one by one or import from Excel</p>
       </div>
 
-      <BulkQuestionForm quizId={params.id} />
+      <BulkQuestionForm quizId={resolvedParams.id} />
     </div>
   )
 }

@@ -3,8 +3,6 @@ CREATE TABLE IF NOT EXISTS public.profiles (
   id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
   email TEXT NOT NULL,
   full_name TEXT NOT NULL,
-  roll_number TEXT,
-  department TEXT DEFAULT 'Computer Science',
   college TEXT DEFAULT 'Mankar College',
   role TEXT NOT NULL CHECK (role IN ('student', 'admin')) DEFAULT 'student',
   created_at TIMESTAMPTZ DEFAULT NOW(),

@@ -7,14 +7,16 @@ import { Edit, Plus, ArrowLeft } from "lucide-react"
 import { QuestionsList } from "@/components/admin/questions-list"
 import { notFound, redirect } from "next/navigation"
 
-export default async function QuizDetailPage({ params }: { params: { id: string } }) {
-  if (params.id === "new") {
+export default async function QuizDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const resolvedParams = await params
+  
+  if (resolvedParams.id === "new") {
     redirect("/admin/quizzes/new")
   }
 
   const supabase = await createClient()
 
-  const { data: quiz } = await supabase.from("quizzes").select("*").eq("id", params.id).single()
+  const { data: quiz } = await supabase.from("quizzes").select("*").eq("id", resolvedParams.id).single()
 
   if (!quiz) {
     notFound()
@@ -28,13 +30,13 @@ export default async function QuizDetailPage({ params }: { params: { id: string 
       options(*)
     `,
     )
-    .eq("quiz_id", params.id)
+    .eq("quiz_id", resolvedParams.id)
     .order("order_number", { ascending: true })
 
   const { count: attemptsCount } = await supabase
     .from("quiz_attempts")
     .select("*", { count: "exact", head: true })
-    .eq("quiz_id", params.id)
+    .eq("quiz_id", resolvedParams.id)
 
   return (
     <div className="space-y-6">

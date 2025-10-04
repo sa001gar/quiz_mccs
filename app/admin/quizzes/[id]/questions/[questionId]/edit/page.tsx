@@ -2,7 +2,8 @@ import { createClient } from "@/lib/supabase/server"
 import { notFound, redirect } from "next/navigation"
 import { EditQuestionForm } from "@/components/admin/edit-question-form"
 
-export default async function EditQuestionPage({ params }: { params: { id: string; questionId: string } }) {
+export default async function EditQuestionPage({ params }: { params: Promise<{ id: string; questionId: string }> }) {
+  const resolvedParams = await params
   const supabase = await createClient()
 
   const {
@@ -29,8 +30,8 @@ export default async function EditQuestionPage({ params }: { params: { id: strin
       options(*)
     `,
     )
-    .eq("id", params.questionId)
-    .eq("quiz_id", params.id)
+    .eq("id", resolvedParams.questionId)
+    .eq("quiz_id", resolvedParams.id)
     .single()
 
   if (error || !question) {
@@ -39,7 +40,7 @@ export default async function EditQuestionPage({ params }: { params: { id: strin
 
   return (
     <div className="container mx-auto max-w-4xl py-8">
-      <EditQuestionForm question={question} quizId={params.id} />
+      <EditQuestionForm question={question} quizId={resolvedParams.id} />
     </div>
   )
 }

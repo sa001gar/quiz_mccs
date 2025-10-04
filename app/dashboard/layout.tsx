@@ -1,30 +1,16 @@
-import type React from "react"
-import { createClient } from "@/lib/supabase/server"
-import { redirect } from "next/navigation"
 import { StudentNav } from "@/components/student/student-nav"
 
-export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const supabase = await createClient()
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-
-  if (!user) {
-    redirect("/auth/login")
-  }
-
-  // Check if user is student
-  const { data: profile } = await supabase.from("profiles").select("role").eq("id", user.id).single()
-
-  if (profile?.role === "admin") {
-    redirect("/admin")
-  }
-
+export default function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gradient-to-br from-slate-100 via-purple-100 to-indigo-200">
       <StudentNav />
-      <main className="container mx-auto py-8">{children}</main>
+      <main className="lg:pt-0">
+        {children}
+      </main>
     </div>
   )
 }

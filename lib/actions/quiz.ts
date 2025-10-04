@@ -34,7 +34,8 @@ export async function startQuiz(quizId: string) {
     throw new Error("You have already completed this quiz")
   }
 
-  // Create new attempt
+  // Create new attempt with current timestamp
+  const now = new Date().toISOString()
   const { data: attempt, error: attemptError } = await supabase
     .from("quiz_attempts")
     .insert({
@@ -43,6 +44,7 @@ export async function startQuiz(quizId: string) {
       total_marks: quiz.total_marks,
       passing_score: quiz.passing_score,
       status: "in_progress",
+      started_at: now,
     })
     .select()
     .single()
@@ -179,22 +181,25 @@ export async function submitQuiz(attemptId: string) {
   // Deactivate session
   await supabase.from("active_sessions").update({ is_active: false }).eq("attempt_id", attemptId)
 
-  // Generate certificate if passed
+  // Generate certificate if passed (60% or higher)
   if (passed) {
     const { data: existingCert } = await supabase.from("certificates").select("*").eq("attempt_id", attemptId).single()
 
     if (!existingCert) {
-      // Generate certificate number
+      // Generate unique unguessable certificate number
+      const certId = randomBytes(16).toString('hex').toUpperCase()
       const year = new Date().getFullYear()
-      const { count } = await supabase.from("certificates").select("*", { count: "exact", head: true })
-      const sequence = String((count || 0) + 1).padStart(6, "0")
-      const certNumber = `MKC-CS-${year}-${sequence}`
+      const certNumber = `MCCS-QUIZ-${year}-${certId}`
 
       await supabase.from("certificates").insert({
         attempt_id: attemptId,
         student_id: user.id,
         quiz_id: (attempt.quiz as any).id,
         certificate_number: certNumber,
+        score: score,
+        total_marks: attempt.total_marks,
+        percentage: Math.round((score / attempt.total_marks) * 100),
+        generated_at: new Date().toISOString(),
       })
     }
   }

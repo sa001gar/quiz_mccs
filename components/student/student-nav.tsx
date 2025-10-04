@@ -3,116 +3,175 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
-import { LayoutDashboard, FileText, Award, LogOut, Menu } from "lucide-react"
+import { 
+  Home, 
+  BookOpen, 
+  Trophy, 
+  BarChart3, 
+  User,
+  Menu,
+  X
+} from "lucide-react"
+import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { createClient } from "@/lib/supabase/client"
-import { useRouter } from "next/navigation"
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 
-const navItems = [
+const navigationItems = [
   {
-    title: "Dashboard",
+    name: "Dashboard",
     href: "/dashboard",
-    icon: LayoutDashboard,
+    icon: Home,
   },
   {
-    title: "Quizzes",
+    name: "Quizzes",
     href: "/dashboard/quizzes",
-    icon: FileText,
+    icon: BookOpen,
   },
   {
-    title: "My Results",
+    name: "Results",
     href: "/dashboard/results",
-    icon: Award,
+    icon: BarChart3,
   },
   {
-    title: "Certificates",
+    name: "Certificates",
     href: "/dashboard/certificates",
-    icon: Award,
+    icon: Trophy,
   },
 ]
 
 export function StudentNav() {
   const pathname = usePathname()
-  const router = useRouter()
-
-  const handleLogout = async () => {
-    const supabase = createClient()
-    await supabase.auth.signOut()
-    router.push("/")
-  }
+  const [isOpen, setIsOpen] = useState(false)
 
   return (
-    <nav className="flex items-center justify-between border-b bg-background px-4 py-3 sm:px-6 sm:py-4">
-      <div className="flex items-center gap-3 sm:gap-8">
-        <Link href="/dashboard" className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-            <span className="text-sm font-bold">MC</span>
+    <>
+      {/* Desktop Navigation - Top */}
+      <nav className="hidden lg:block bg-gradient-to-r from-purple-200/80 via-indigo-200/80 to-cyan-200/80 backdrop-blur-sm border-b border-purple-300/50">
+        <div className="container mx-auto px-4 py-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-purple-600 to-indigo-600 text-white shadow-lg">
+                <span className="text-lg font-bold">MC</span>
+              </div>
+              <div>
+                <h1 className="text-xl font-bold text-slate-800">MCCS-QUIZZARDS 2025</h1>
+                <p className="text-slate-600 text-sm">Student Portal</p>
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-1">
+              {navigationItems.map((item) => {
+                const Icon = item.icon
+                return (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    className={cn(
+                      "flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200",
+                      pathname === item.href
+                        ? "bg-purple-600 text-white shadow-lg"
+                        : "text-slate-600 hover:bg-purple-100 hover:text-slate-800"
+                    )}
+                  >
+                    <Icon className="h-4 w-4" />
+                    {item.name}
+                  </Link>
+                )
+              })}
+            </div>
           </div>
-          <div className="flex flex-col">
-            <span className="text-sm font-semibold leading-none">Mankar College</span>
-            <span className="text-xs text-muted-foreground">Student Portal</span>
-          </div>
-        </Link>
+        </div>
+      </nav>
 
-        <div className="hidden items-center gap-1 md:flex">
-          {navItems.map((item) => {
+      {/* Mobile Navigation - Bottom Fixed */}
+      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-gradient-to-r from-purple-600/95 via-indigo-600/95 to-cyan-600/95 backdrop-blur-md border-t border-white/20 shadow-2xl">
+        <div className="flex items-center justify-around py-2">
+          {navigationItems.map((item) => {
             const Icon = item.icon
-            const isActive = pathname === item.href || pathname?.startsWith(item.href + "/")
-
+            const isActive = pathname === item.href
             return (
-              <Link key={item.href} href={item.href}>
-                <Button
-                  variant={isActive ? "secondary" : "ghost"}
-                  size="sm"
-                  className={cn("gap-2", isActive && "bg-secondary")}
-                >
-                  <Icon className="h-4 w-4" />
-                  {item.title}
-                </Button>
+              <Link
+                key={item.name}
+                href={item.href}
+                className={cn(
+                  "flex flex-col items-center gap-1 px-3 py-2 rounded-lg transition-all duration-200 min-w-0 flex-1",
+                  isActive
+                    ? "bg-white/20 text-white"
+                    : "text-purple-200 hover:bg-white/10 hover:text-white"
+                )}
+              >
+                <Icon className={cn("h-5 w-5", isActive && "scale-110")} />
+                <span className="text-xs font-medium truncate">{item.name}</span>
               </Link>
             )
           })}
         </div>
+      </nav>
 
-        <div className="md:hidden">
-          <Sheet>
+      {/* Mobile Header with Menu */}
+      <div className="lg:hidden bg-gradient-to-r from-purple-200/80 via-indigo-200/80 to-cyan-200/80 backdrop-blur-sm border-b border-purple-300/50 p-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-purple-600 to-indigo-600 text-white shadow-lg">
+              <span className="text-sm font-bold">MC</span>
+            </div>
+            <div>
+              <h1 className="text-lg font-bold text-slate-800">MCCS-QUIZZARDS</h1>
+              <p className="text-slate-600 text-xs">Student Portal</p>
+            </div>
+          </div>
+          
+          <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" aria-label="Open menu">
+              <Button variant="ghost" size="sm" className="text-slate-800 hover:bg-purple-100">
                 <Menu className="h-5 w-5" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="w-72">
-              <SheetHeader>
-                <SheetTitle>Menu</SheetTitle>
-              </SheetHeader>
-              <div className="mt-4 flex flex-col gap-2">
-                {navItems.map((item) => {
-                  const Icon = item.icon
-                  const isActive = pathname === item.href || pathname?.startsWith(item.href + "/")
-                  return (
-                    <Link key={item.href} href={item.href} className="w-full">
-                      <Button
-                        variant={isActive ? "secondary" : "ghost"}
-                        size="sm"
-                        className={cn("w-full justify-start gap-2", isActive && "bg-secondary")}
+            <SheetContent side="right" className="bg-gradient-to-br from-slate-100 via-purple-100 to-indigo-200 border-l border-purple-300/50">
+              <div className="flex flex-col h-full">
+                <div className="flex items-center gap-3 mb-8">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-purple-600 to-indigo-600 text-white shadow-lg">
+                    <span className="text-lg font-bold">MC</span>
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-bold text-slate-800">MCCS-QUIZZARDS 2025</h2>
+                    <p className="text-slate-600 text-sm">Student Portal</p>
+                  </div>
+                </div>
+                
+                <div className="flex-1 space-y-2">
+                  {navigationItems.map((item) => {
+                    const Icon = item.icon
+                    return (
+                      <Link
+                        key={item.name}
+                        href={item.href}
+                        onClick={() => setIsOpen(false)}
+                        className={cn(
+                          "flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200",
+                          pathname === item.href
+                            ? "bg-purple-600 text-white shadow-lg"
+                            : "text-slate-600 hover:bg-purple-100 hover:text-slate-800"
+                        )}
                       >
-                        <Icon className="h-4 w-4" />
-                        {item.title}
-                      </Button>
-                    </Link>
-                  )
-                })}
+                        <Icon className="h-5 w-5" />
+                        {item.name}
+                      </Link>
+                    )
+                  })}
+                </div>
+                
+                <div className="pt-4 border-t border-purple-300/50">
+                  <div className="text-center">
+                    <p className="text-slate-600 text-sm">5th National Level Quiz Competition</p>
+                    <p className="text-slate-500 text-xs">October 25-26, 2025</p>
+                  </div>
+                </div>
               </div>
             </SheetContent>
           </Sheet>
         </div>
       </div>
-
-      <Button variant="ghost" size="sm" onClick={handleLogout} className="gap-2">
-        <LogOut className="h-4 w-4" />
-        Logout
-      </Button>
-    </nav>
+    </>
   )
 }
