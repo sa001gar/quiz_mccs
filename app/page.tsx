@@ -40,7 +40,12 @@ import {
 
 // 1. Infinite Topic Ticker (Marquee Effect)
 function TopicTicker() {
-  const topics = ["Algorithm Design", "Web Development", "Artificial Intelligence", "Database Management", "Cyber Security", "Cloud Computing", "Data Structures", "Operating Systems", "Networking", "Python", "JavaScript", "React & Next.js"]
+  const topics = [
+    "Literature", "Geopolitics", "History", "Philosophy", "Environment",
+    "Arts", "Sociology", "Psychology", "Economics", "Anthropology",
+    "Linguistics", "Archaeology", "Geography", "Political Science", "Ethics",
+    "Mythology", "Folklore", "Religion", "Societal Trends", "Current Events"
+  ]
 
   return (
     <div className="w-full bg-indigo-900 border-y border-indigo-800 overflow-hidden py-3 relative z-20">
@@ -86,7 +91,7 @@ function CountdownTimer() {
   }, [])
 
   return (
-    <div className="relative overflow-hidden rounded-[2rem] md:rounded-[3rem] p-6 md:p-12 shadow-2xl border border-white/10 bg-slate-900/50 backdrop-blur-xl w-full max-w-5xl mx-auto">
+    <div className="relative overflow-hidden rounded-[2rem] md:rounded-[3rem] p-6 md:p-12 shadow-2xl border border-white/10 bg-slate-900/50 backdrop-blur-xl w-full max-w-7xl mx-auto">
       {/* Decorative Gradients */}
       <div className="absolute -top-32 -right-32 w-64 md:w-96 h-64 md:h-96 bg-fuchsia-500/20 rounded-full blur-[80px]" />
       <div className="absolute -bottom-32 -left-32 w-64 md:w-96 h-64 md:h-96 bg-indigo-500/20 rounded-full blur-[80px]" />
@@ -102,8 +107,8 @@ function CountdownTimer() {
         </h1>
 
         <div className="flex flex-wrap justify-center items-center gap-2 md:gap-3 mb-8 md:mb-12 text-indigo-100/90 font-medium text-sm md:text-xl border border-white/10 bg-black/20 px-4 py-2 md:px-6 md:py-3 rounded-full backdrop-blur-md">
-          <GraduationCap className="h-5 w-5 md:h-6 md:w-6 text-fuchsia-400" />
-          <span>Dept. of Computer Science, Mankar College</span>
+          <GraduationCap className="hidden md:block md:h-6 md:w-6 text-fuchsia-400" />
+          <span>Department of Computer Science, Mankar College</span>
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6 w-full max-w-4xl mb-8 md:mb-12">
