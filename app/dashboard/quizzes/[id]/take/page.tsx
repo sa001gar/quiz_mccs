@@ -7,12 +7,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
-import { 
-  Clock, 
-  CheckCircle, 
-  Circle, 
-  AlertTriangle, 
-  Eye, 
+import {
+  Clock,
+  CheckCircle,
+  Circle,
+  AlertTriangle,
+  Eye,
   EyeOff,
   Play,
   Pause,
@@ -71,19 +71,19 @@ function TakeQuizContent() {
   const [showWarning, setShowWarning] = useState(false)
   const [isFullscreen, setIsFullscreen] = useState(false)
   const [showReview, setShowReview] = useState(false)
-  
+
   const startTimeRef = useRef<number>(Date.now())
   const intervalRef = useRef<NodeJS.Timeout | null>(null)
   const warningTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
-  
+
   // Anti-cheating measures
   useEffect(() => {
     const handleVisibilityChange = () => {
       if (document.hidden) {
         setTabSwitchCount(prev => prev + 1)
         setShowWarning(true)
-        
+
         if (tabSwitchCount >= 2) {
           handleAutoSubmit()
         } else {
@@ -106,7 +106,7 @@ function TakeQuizContent() {
         setTabSwitchCount(prev => prev + 1)
         setShowWarning(true)
       }
-      
+
       // Prevent F12, Ctrl+Shift+I, etc.
       if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I')) {
         e.preventDefault()
@@ -162,7 +162,7 @@ function TakeQuizContent() {
     intervalRef.current = setInterval(() => {
       const currentTime = Date.now()
       const currentRemainingMs = endTime - currentTime
-      
+
       if (currentRemainingMs <= 0) {
         handleAutoSubmit()
       } else {
@@ -181,14 +181,14 @@ function TakeQuizContent() {
   const handleAutoSubmit = useCallback(async () => {
     if (isSubmitting) return
     setIsSubmitting(true)
-    
+
     try {
       // Import and call the server action for proper submission
       const { submitQuiz } = await import('@/lib/actions/quiz')
       if (attemptId) {
         await submitQuiz(attemptId)
       }
-      
+
       router.push('/dashboard/results')
     } catch (error) {
       console.error('Error auto-submitting:', error)
@@ -205,7 +205,7 @@ function TakeQuizContent() {
   const handleAnswerSelect = (optionId: string) => {
     const currentQuestion = questions[currentQuestionIndex]
     setAnswers(prev => new Map(prev.set(currentQuestion.id, optionId)))
-    
+
     // Auto-advance to next question after a short delay
     setTimeout(() => {
       if (currentQuestionIndex < questions.length - 1) {
@@ -222,25 +222,25 @@ function TakeQuizContent() {
   const handleSubmit = async () => {
     if (isSubmitting) return
     setIsSubmitting(true)
-    
+
     try {
       const supabase = createClient()
-      
+
       // Save all answers first
       const answerEntries = Array.from(answers.entries()).map(([questionId, optionId]) => ({
         attempt_id: attemptId,
         question_id: questionId,
         selected_option_id: optionId
       }))
-      
+
       await supabase.from('answers').upsert(answerEntries)
-      
+
       // Import and call the server action for proper submission
       const { submitQuiz } = await import('@/lib/actions/quiz')
       if (attemptId) {
         await submitQuiz(attemptId)
       }
-      
+
       router.push('/dashboard/results')
     } catch (error) {
       console.error('Error submitting quiz:', error)
@@ -250,12 +250,12 @@ function TakeQuizContent() {
   useEffect(() => {
     let isMounted = true
     const supabase = createClient()
-    
+
     async function load() {
       try {
         // Await params before using
         const resolvedParams = await params
-        
+
         const { data: { user } } = await supabase.auth.getUser()
 
         const { data: quizData } = await supabase
@@ -271,11 +271,11 @@ function TakeQuizContent() {
         }
 
         const { data: attemptData } = await supabase
-    .from("quiz_attempts")
-    .select("*")
+          .from("quiz_attempts")
+          .select("*")
           .eq("quiz_id", resolvedParams.id)
-    .eq("student_id", user?.id)
-    .single()
+          .eq("student_id", user?.id)
+          .single()
 
         if (!attemptData || attemptData.status !== 'in_progress') {
           router.replace(`/dashboard/quizzes/${resolvedParams.id}`)
@@ -305,10 +305,10 @@ function TakeQuizContent() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-100 via-purple-100 to-indigo-200 flex items-center justify-center">
-        <div className="text-slate-800 text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-2 border-slate-800 border-t-transparent mx-auto mb-4"></div>
-          <p>Loading quiz...</p>
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-2 border-primary border-t-transparent mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading quiz...</p>
         </div>
       </div>
     )
@@ -321,55 +321,53 @@ function TakeQuizContent() {
   const progress = (answeredQuestions / questions.length) * 100
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-100 via-purple-100 to-indigo-200 relative overflow-hidden">
-      {/* Animated Background Elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-20 left-10 w-40 h-40 bg-gradient-to-br from-purple-200/20 to-pink-200/20 rounded-full blur-3xl animate-float" />
-        <div className="absolute top-40 right-20 w-32 h-32 bg-gradient-to-br from-cyan-200/20 to-blue-200/20 rounded-full blur-2xl animate-float delay-1000" />
-        <div className="absolute bottom-20 left-1/4 w-48 h-48 bg-gradient-to-br from-yellow-200/20 to-orange-200/20 rounded-full blur-3xl animate-float delay-2000" />
+    <div className="min-h-screen bg-background relative overflow-hidden">
+      {/* Abstract Background Shapes */}
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10 opacity-30">
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/20 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2" />
+        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-secondary/40 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/2" />
       </div>
 
       <div className="relative z-10 min-h-screen flex flex-col">
         {/* Header */}
-        <div className="bg-white/90 backdrop-blur-md border-b border-purple-200/50 shadow-lg">
+        <div className="bg-background/90 backdrop-blur-md border-b border-border/50 shadow-lg sticky top-0 z-50">
           <div className="p-4">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-gradient-to-br from-purple-600 to-indigo-600 rounded-lg">
-                  <BookOpen className="h-5 w-5 text-white" />
+                <div className="p-2 bg-primary/10 rounded-lg">
+                  <BookOpen className="h-5 w-5 text-primary" />
                 </div>
                 <div>
-                  <h1 className="text-lg font-bold text-slate-800">{quiz.title}</h1>
-                  <p className="text-sm text-slate-600">Question {currentQuestionIndex + 1} of {questions.length}</p>
+                  <h1 className="text-lg font-bold text-foreground font-heading">{quiz.title}</h1>
+                  <p className="text-sm text-muted-foreground">Question {currentQuestionIndex + 1} of {questions.length}</p>
                 </div>
               </div>
-              
+
               <div className="flex items-center gap-4">
                 {/* Timer */}
-                <div className={`flex items-center gap-2 px-3 py-2 rounded-lg ${
-                  timeLeft < 300 ? 'bg-red-100 text-red-800' : 'bg-blue-100 text-blue-800'
-                }`}>
+                <div className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-colors ${timeLeft < 300 ? 'bg-destructive/10 text-destructive' : 'bg-primary/10 text-primary'
+                  }`}>
                   <Timer className="h-4 w-4" />
                   <span className="font-mono font-bold">{formatTime(timeLeft)}</span>
                 </div>
-                
+
                 {/* Progress */}
                 <div className="flex items-center gap-2">
-                  <div className="w-24 bg-slate-200 rounded-full h-2">
-                    <div 
-                      className="bg-gradient-to-r from-purple-600 to-indigo-600 h-2 rounded-full transition-all duration-300"
+                  <div className="w-24 bg-secondary rounded-full h-2">
+                    <div
+                      className="bg-primary h-2 rounded-full transition-all duration-300"
                       style={{ width: `${progress}%` }}
                     ></div>
                   </div>
-                  <span className="text-sm font-medium text-slate-600">{Math.round(progress)}%</span>
+                  <span className="text-sm font-medium text-muted-foreground">{Math.round(progress)}%</span>
                 </div>
               </div>
             </div>
-            
+
             {/* Progress Bar */}
-            <div className="w-full bg-slate-200 rounded-full h-1">
-              <div 
-                className="bg-gradient-to-r from-purple-600 to-indigo-600 h-1 rounded-full transition-all duration-500"
+            <div className="w-full bg-secondary rounded-full h-1">
+              <div
+                className="bg-primary h-1 rounded-full transition-all duration-500"
                 style={{ width: `${((currentQuestionIndex + 1) / questions.length) * 100}%` }}
               ></div>
             </div>
@@ -381,14 +379,14 @@ function TakeQuizContent() {
           <div className="max-w-4xl mx-auto">
             {showReview ? (
               /* Review Mode */
-              <Card className="bg-white/90 backdrop-blur-md border-purple-200/50 shadow-xl">
+              <Card className="bg-card border-border/50 shadow-xl">
                 <CardHeader>
                   <div className="flex items-center justify-between">
-                    <CardTitle className="text-xl font-bold text-slate-800">Review Your Answers</CardTitle>
-                    <Button 
+                    <CardTitle className="text-xl font-bold text-foreground font-heading">Review Your Answers</CardTitle>
+                    <Button
                       onClick={() => setShowReview(false)}
                       variant="outline"
-                      className="border-purple-300 text-slate-700 hover:bg-purple-100"
+                      className="border-primary/20 text-foreground hover:bg-primary/10"
                     >
                       <EyeOff className="mr-2 h-4 w-4" />
                       Hide Review
@@ -400,28 +398,27 @@ function TakeQuizContent() {
                     {questions.map((question, index) => {
                       const isAnswered = answers.has(question.id)
                       const isCurrent = index === currentQuestionIndex
-                      
+
                       return (
                         <button
                           key={question.id}
                           onClick={() => handleQuestionNavigation(index)}
-                          className={`p-4 rounded-lg border-2 transition-all duration-200 ${
-                            isCurrent 
-                              ? 'border-purple-500 bg-purple-50' 
-                              : isAnswered 
-                                ? 'border-green-500 bg-green-50' 
-                                : 'border-slate-300 bg-white hover:border-purple-300'
-                          }`}
+                          className={`p-4 rounded-lg border-2 transition-all duration-200 ${isCurrent
+                              ? 'border-primary bg-primary/5'
+                              : isAnswered
+                                ? 'border-green-500/50 bg-green-500/5'
+                                : 'border-border bg-card hover:border-primary/50'
+                            }`}
                         >
                           <div className="flex items-center justify-between mb-2">
-                            <span className="font-medium text-slate-800">Q{index + 1}</span>
+                            <span className="font-medium text-foreground">Q{index + 1}</span>
                             {isAnswered ? (
-                              <CheckCircle className="h-5 w-5 text-green-600" />
+                              <CheckCircle className="h-5 w-5 text-green-500" />
                             ) : (
-                              <Circle className="h-5 w-5 text-slate-400" />
+                              <Circle className="h-5 w-5 text-muted-foreground" />
                             )}
                           </div>
-                          <p className="text-sm text-slate-600 line-clamp-2">{question.question_text}</p>
+                          <p className="text-sm text-muted-foreground line-clamp-2 text-left">{question.question_text}</p>
                         </button>
                       )
                     })}
@@ -430,19 +427,19 @@ function TakeQuizContent() {
               </Card>
             ) : (
               /* Question Mode */
-              <Card className="bg-white/90 backdrop-blur-md border-purple-200/50 shadow-xl">
+              <Card className="bg-card border-border/50 shadow-xl">
                 <CardContent className="p-8">
                   <div className="mb-8">
                     <div className="flex items-center justify-between mb-4">
-                      <Badge className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-3 py-1">
+                      <Badge className="bg-primary text-primary-foreground px-3 py-1">
                         Question {currentQuestionIndex + 1} of {questions.length}
                       </Badge>
-                      <Badge className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-3 py-1">
+                      <Badge className="bg-yellow-500 text-white px-3 py-1">
                         {currentQuestion.marks} marks
                       </Badge>
                     </div>
-                    
-                    <h2 className="text-2xl font-bold text-slate-800 mb-6 leading-relaxed">
+
+                    <h2 className="text-2xl font-bold text-foreground mb-6 leading-relaxed font-heading">
                       {currentQuestion.question_text}
                     </h2>
                   </div>
@@ -452,25 +449,23 @@ function TakeQuizContent() {
                     {currentQuestion.options.map((option) => {
                       const isSelected = answers.get(currentQuestion.id) === option.id
 
-  return (
+                      return (
                         <button
                           key={option.id}
                           onClick={() => handleAnswerSelect(option.id)}
-                          className={`w-full p-4 rounded-xl border-2 transition-all duration-200 text-left ${
-                            isSelected
-                              ? 'border-purple-500 bg-purple-50 shadow-lg'
-                              : 'border-slate-300 bg-white hover:border-purple-300 hover:bg-purple-50'
-                          }`}
+                          className={`w-full p-4 rounded-xl border-2 transition-all duration-200 text-left ${isSelected
+                              ? 'border-primary bg-primary/5 shadow-lg'
+                              : 'border-border bg-card hover:border-primary/50 hover:bg-primary/5'
+                            }`}
                         >
                           <div className="flex items-center gap-3">
-                            <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
-                              isSelected 
-                                ? 'border-purple-500 bg-purple-500' 
-                                : 'border-slate-300'
-                            }`}>
-                              {isSelected && <div className="w-2 h-2 bg-white rounded-full"></div>}
+                            <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${isSelected
+                                ? 'border-primary bg-primary'
+                                : 'border-muted-foreground/30'
+                              }`}>
+                              {isSelected && <div className="w-2 h-2 bg-primary-foreground rounded-full"></div>}
                             </div>
-                            <span className="text-slate-800 font-medium">{option.option_text}</span>
+                            <span className="text-foreground font-medium">{option.option_text}</span>
                           </div>
                         </button>
                       )
@@ -483,40 +478,40 @@ function TakeQuizContent() {
         </div>
 
         {/* Footer */}
-        <div className="bg-white/90 backdrop-blur-md border-t border-purple-200/50 shadow-lg">
+        <div className="bg-background/90 backdrop-blur-md border-t border-border/50 shadow-lg sticky bottom-0 z-50">
           <div className="p-4">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between max-w-4xl mx-auto">
               <div className="flex items-center gap-3">
                 <Button
                   onClick={() => setShowReview(!showReview)}
                   variant="outline"
-                  className="border-purple-300 text-slate-700 hover:bg-purple-100"
+                  className="border-primary/20 text-foreground hover:bg-primary/10"
                 >
                   <Eye className="mr-2 h-4 w-4" />
                   {showReview ? 'Hide Review' : 'Review'}
                 </Button>
-                
-                <div className="text-sm text-slate-600">
+
+                <div className="text-sm text-muted-foreground hidden sm:block">
                   {answeredQuestions} of {questions.length} answered
                 </div>
               </div>
-              
+
               <div className="flex items-center gap-3">
                 {currentQuestionIndex > 0 && (
                   <Button
                     onClick={() => setCurrentQuestionIndex(prev => prev - 1)}
                     variant="outline"
-                    className="border-purple-300 text-slate-700 hover:bg-purple-100"
+                    className="border-primary/20 text-foreground hover:bg-primary/10"
                   >
                     <ChevronLeft className="mr-2 h-4 w-4" />
                     Previous
                   </Button>
                 )}
-                
+
                 {currentQuestionIndex < questions.length - 1 ? (
                   <Button
                     onClick={() => setCurrentQuestionIndex(prev => prev + 1)}
-                    className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white"
+                    className="bg-primary text-primary-foreground hover:bg-primary/90"
                   >
                     Next
                     <ChevronRight className="ml-2 h-4 w-4" />
@@ -525,7 +520,7 @@ function TakeQuizContent() {
                   <Button
                     onClick={handleSubmit}
                     disabled={isSubmitting}
-                    className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white"
+                    className="bg-green-600 hover:bg-green-700 text-white shadow-lg shadow-green-600/20"
                   >
                     {isSubmitting ? (
                       <>
@@ -548,22 +543,22 @@ function TakeQuizContent() {
 
       {/* Warning Modal */}
       {showWarning && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <Card className="bg-white shadow-2xl max-w-md mx-4">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[100]">
+          <Card className="bg-card shadow-2xl max-w-md mx-4 border-destructive/20">
             <CardContent className="p-6 text-center">
-              <div className="p-3 bg-red-100 rounded-full w-fit mx-auto mb-4">
-                <AlertTriangle className="h-8 w-8 text-red-600" />
+              <div className="p-3 bg-destructive/10 rounded-full w-fit mx-auto mb-4">
+                <AlertTriangle className="h-8 w-8 text-destructive" />
               </div>
-              <h3 className="text-xl font-bold text-slate-800 mb-2">Warning!</h3>
-              <p className="text-slate-600 mb-4">
-                {tabSwitchCount >= 2 
+              <h3 className="text-xl font-bold text-foreground mb-2">Warning!</h3>
+              <p className="text-muted-foreground mb-4">
+                {tabSwitchCount >= 2
                   ? "You have switched tabs too many times. Your quiz will be auto-submitted."
                   : `You have switched tabs ${tabSwitchCount + 1} times. ${2 - tabSwitchCount} more switches will auto-submit your quiz.`
                 }
               </p>
               <Button
                 onClick={() => setShowWarning(false)}
-                className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white"
+                className="bg-destructive hover:bg-destructive/90 text-white"
               >
                 I Understand
               </Button>
@@ -578,10 +573,10 @@ function TakeQuizContent() {
 // Loading component for Suspense fallback
 function TakeQuizLoading() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-100 via-purple-100 to-indigo-200 flex items-center justify-center">
-      <div className="text-slate-800 text-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-2 border-slate-800 border-t-transparent mx-auto mb-4"></div>
-        <p>Loading quiz...</p>
+    <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-2 border-primary border-t-transparent mx-auto mb-4"></div>
+        <p className="text-muted-foreground">Loading quiz...</p>
       </div>
     </div>
   )

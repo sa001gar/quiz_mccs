@@ -6,20 +6,16 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { useRouter, useParams } from "next/navigation"
-import { 
-  Clock, 
-  FileText, 
-  Award, 
-  AlertCircle, 
+import {
+  Clock,
+  FileText,
+  Award,
+  AlertCircle,
   BookOpen,
   Target,
-  Timer,
-  Star,
   Shield,
   Zap,
   ChevronLeft,
-  Play,
-  CheckCircle,
   Users,
   Brain,
   Trophy,
@@ -85,11 +81,11 @@ function QuizStartContent() {
             .eq("quiz_id", params.id),
           user
             ? supabase
-                .from("quiz_attempts")
-                .select("id, status, started_at")
-                .eq("quiz_id", params.id)
-                .eq("student_id", user.id)
-                .single()
+              .from("quiz_attempts")
+              .select("id, status, started_at")
+              .eq("quiz_id", params.id)
+              .eq("student_id", user.id)
+              .single()
             : Promise.resolve({ data: null }),
         ])
 
@@ -126,10 +122,10 @@ function QuizStartContent() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-100 via-purple-100 to-indigo-200 flex items-center justify-center">
-        <div className="text-slate-800 text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-2 border-slate-800 border-t-transparent mx-auto mb-4"></div>
-          <p>Loading quiz details...</p>
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-2 border-primary border-t-transparent mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading quiz details...</p>
         </div>
       </div>
     )
@@ -138,27 +134,25 @@ function QuizStartContent() {
   if (!quiz) return null
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-100 via-purple-100 to-indigo-200 relative overflow-hidden">
-      {/* Animated Background Elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-20 left-10 w-40 h-40 bg-gradient-to-br from-purple-200/30 to-pink-200/30 rounded-full blur-3xl animate-float" />
-        <div className="absolute top-40 right-20 w-32 h-32 bg-gradient-to-br from-cyan-200/30 to-blue-200/30 rounded-full blur-2xl animate-float delay-1000" />
-        <div className="absolute bottom-20 left-1/4 w-48 h-48 bg-gradient-to-br from-yellow-200/30 to-orange-200/30 rounded-full blur-3xl animate-float delay-2000" />
-        <div className="absolute bottom-40 right-1/3 w-36 h-36 bg-gradient-to-br from-green-200/30 to-teal-200/30 rounded-full blur-2xl animate-float delay-3000" />
+    <div className="min-h-screen bg-background relative overflow-hidden">
+      {/* Abstract Background Shapes */}
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10 opacity-30">
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/20 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2" />
+        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-secondary/40 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/2" />
       </div>
 
       <div className="relative z-10 pb-20 sm:pb-8">
-        <div className="p-4 sm:p-6">
+        <div className="p-4 sm:p-6 max-w-5xl mx-auto">
           {/* Header */}
           <div className="mb-8">
             <div className="flex items-center justify-between gap-4 mb-6">
               <Link href="/dashboard/quizzes">
-                <Button variant="outline" className="border-purple-300 text-slate-700 hover:bg-purple-100">
+                <Button variant="outline" className="border-primary/20 text-foreground hover:bg-primary/10">
                   <ChevronLeft className="mr-2 h-4 w-4" />
                   Back to Quizzes
                 </Button>
               </Link>
-              
+
               {/* Start Exam Button - Top Right */}
               {isAvailable && (
                 <div className="flex gap-3">
@@ -166,41 +160,42 @@ function QuizStartContent() {
                 </div>
               )}
             </div>
-            
+
             {/* Quiz Title and Description */}
-            <Card className="bg-gradient-to-r from-purple-200/80 via-indigo-200/80 to-cyan-200/80 backdrop-blur-md border-purple-300/50 shadow-xl mb-8">
-              <CardContent className="p-8">
+            <Card className="bg-card border-border/50 shadow-xl mb-8 overflow-hidden relative">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+              <CardContent className="p-8 relative z-10">
                 <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
                   <div className="flex-1">
                     <div className="flex items-center gap-4 mb-4">
-                      <div className="p-3 bg-gradient-to-br from-purple-600 to-indigo-600 rounded-xl shadow-lg">
-                        <BookOpen className="h-8 w-8 text-white" />
+                      <div className="p-3 bg-primary/10 rounded-xl shadow-sm">
+                        <BookOpen className="h-8 w-8 text-primary" />
                       </div>
                       <div>
-                        <h1 className="text-3xl sm:text-4xl font-bold text-slate-800 mb-2">
+                        <h1 className="font-heading text-3xl sm:text-4xl font-bold text-foreground mb-2">
                           {quiz.title}
                         </h1>
-                        <Badge className="bg-gradient-to-r from-green-500 to-emerald-500 text-white px-4 py-1">
+                        <Badge className="bg-green-500/10 text-green-600 border-green-500/20 px-4 py-1">
                           <Sparkles className="mr-2 h-3 w-3" />
                           Active Quiz
                         </Badge>
                       </div>
                     </div>
-                    <p className="text-slate-600 text-lg leading-relaxed">
+                    <p className="text-muted-foreground text-lg leading-relaxed">
                       {quiz.description || "Test your knowledge with this comprehensive quiz and earn your certificate."}
                     </p>
                   </div>
-                  
+
                   {/* Quick Stats */}
-                  <div className="lg:ml-8">
+                  <div className="lg:ml-8 w-full lg:w-auto">
                     <div className="grid grid-cols-2 gap-4">
-                      <div className="text-center p-4 bg-white/50 rounded-xl border border-white/30">
-                        <div className="text-2xl font-bold text-slate-800">{quiz.duration_minutes}</div>
-                        <div className="text-sm text-slate-600">Minutes</div>
+                      <div className="text-center p-4 bg-secondary/30 rounded-xl border border-border/50">
+                        <div className="text-2xl font-bold text-foreground">{quiz.duration_minutes}</div>
+                        <div className="text-sm text-muted-foreground">Minutes</div>
                       </div>
-                      <div className="text-center p-4 bg-white/50 rounded-xl border border-white/30">
-                        <div className="text-2xl font-bold text-slate-800">{questionCount}</div>
-                        <div className="text-sm text-slate-600">Questions</div>
+                      <div className="text-center p-4 bg-secondary/30 rounded-xl border border-border/50">
+                        <div className="text-2xl font-bold text-foreground">{questionCount}</div>
+                        <div className="text-sm text-muted-foreground">Questions</div>
                       </div>
                     </div>
                   </div>
@@ -211,113 +206,113 @@ function QuizStartContent() {
 
           {/* Quiz Details Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-            <Card className="bg-white/80 backdrop-blur-md border-purple-200/50 shadow-xl hover:shadow-2xl transition-all duration-300">
+            <Card className="bg-card border-border/50 shadow-lg hover:shadow-xl transition-all duration-300">
               <CardContent className="p-6 text-center">
-                <div className="p-3 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl w-fit mx-auto mb-4">
-                  <Clock className="h-6 w-6 text-white" />
+                <div className="p-3 bg-blue-500/10 rounded-xl w-fit mx-auto mb-4">
+                  <Clock className="h-6 w-6 text-blue-500" />
                 </div>
-                <h3 className="text-lg font-bold text-slate-800 mb-1">Duration</h3>
-                <p className="text-3xl font-bold text-slate-800">{quiz.duration_minutes}</p>
-                <p className="text-sm text-slate-600">minutes</p>
+                <h3 className="text-lg font-bold text-foreground mb-1">Duration</h3>
+                <p className="text-3xl font-heading font-bold text-foreground">{quiz.duration_minutes}</p>
+                <p className="text-sm text-muted-foreground">minutes</p>
               </CardContent>
             </Card>
 
-            <Card className="bg-white/80 backdrop-blur-md border-purple-200/50 shadow-xl hover:shadow-2xl transition-all duration-300">
+            <Card className="bg-card border-border/50 shadow-lg hover:shadow-xl transition-all duration-300">
               <CardContent className="p-6 text-center">
-                <div className="p-3 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl w-fit mx-auto mb-4">
-                  <FileText className="h-6 w-6 text-white" />
+                <div className="p-3 bg-green-500/10 rounded-xl w-fit mx-auto mb-4">
+                  <FileText className="h-6 w-6 text-green-500" />
                 </div>
-                <h3 className="text-lg font-bold text-slate-800 mb-1">Questions</h3>
-                <p className="text-3xl font-bold text-slate-800">{questionCount || 0}</p>
-                <p className="text-sm text-slate-600">total questions</p>
+                <h3 className="text-lg font-bold text-foreground mb-1">Questions</h3>
+                <p className="text-3xl font-heading font-bold text-foreground">{questionCount || 0}</p>
+                <p className="text-sm text-muted-foreground">total questions</p>
               </CardContent>
             </Card>
 
-            <Card className="bg-white/80 backdrop-blur-md border-purple-200/50 shadow-xl hover:shadow-2xl transition-all duration-300">
+            <Card className="bg-card border-border/50 shadow-lg hover:shadow-xl transition-all duration-300">
               <CardContent className="p-6 text-center">
-                <div className="p-3 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-xl w-fit mx-auto mb-4">
-                  <Target className="h-6 w-6 text-white" />
+                <div className="p-3 bg-yellow-500/10 rounded-xl w-fit mx-auto mb-4">
+                  <Target className="h-6 w-6 text-yellow-500" />
                 </div>
-                <h3 className="text-lg font-bold text-slate-800 mb-1">Total Marks</h3>
-                <p className="text-3xl font-bold text-slate-800">{quiz.total_marks}</p>
-                <p className="text-sm text-slate-600">maximum score</p>
+                <h3 className="text-lg font-bold text-foreground mb-1">Total Marks</h3>
+                <p className="text-3xl font-heading font-bold text-foreground">{quiz.total_marks}</p>
+                <p className="text-sm text-muted-foreground">maximum score</p>
               </CardContent>
             </Card>
 
-            <Card className="bg-white/80 backdrop-blur-md border-purple-200/50 shadow-xl hover:shadow-2xl transition-all duration-300">
+            <Card className="bg-card border-border/50 shadow-lg hover:shadow-xl transition-all duration-300">
               <CardContent className="p-6 text-center">
-                <div className="p-3 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl w-fit mx-auto mb-4">
-                  <Award className="h-6 w-6 text-white" />
+                <div className="p-3 bg-primary/10 rounded-xl w-fit mx-auto mb-4">
+                  <Award className="h-6 w-6 text-primary" />
                 </div>
-                <h3 className="text-lg font-bold text-slate-800 mb-1">Passing Score</h3>
-                <p className="text-3xl font-bold text-slate-800">{quiz.passing_score}</p>
-                <p className="text-sm text-slate-600">marks required</p>
+                <h3 className="text-lg font-bold text-foreground mb-1">Passing Score</h3>
+                <p className="text-3xl font-heading font-bold text-foreground">{quiz.passing_score}</p>
+                <p className="text-sm text-muted-foreground">marks required</p>
               </CardContent>
             </Card>
           </div>
 
           {/* Countdown Timer */}
           {isScheduled && startMs && (
-            <Card className="bg-gradient-to-r from-purple-200/80 via-indigo-200/80 to-cyan-200/80 backdrop-blur-md border-purple-300/50 shadow-xl mb-8">
+            <Card className="bg-card border-border/50 shadow-xl mb-8">
               <CardContent className="p-6">
-                <QuizCountdown 
-                  scheduledStart={quiz.scheduled_start as string} 
-                  scheduledEnd={quiz.scheduled_end || null} 
+                <QuizCountdown
+                  scheduledStart={quiz.scheduled_start as string}
+                  scheduledEnd={quiz.scheduled_end || null}
                 />
               </CardContent>
             </Card>
           )}
 
           {/* Instructions */}
-          <Card className="bg-gradient-to-r from-orange-100/80 to-yellow-100/80 backdrop-blur-md border-orange-300/50 shadow-xl mb-8">
+          <Card className="bg-orange-500/5 border-orange-500/20 shadow-xl mb-8">
             <CardHeader>
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-gradient-to-br from-orange-500 to-yellow-500 rounded-lg">
-                  <AlertCircle className="h-5 w-5 text-white" />
+                <div className="p-2 bg-orange-500/10 rounded-lg">
+                  <AlertCircle className="h-5 w-5 text-orange-600" />
                 </div>
-                <CardTitle className="text-xl font-bold text-slate-800">Important Instructions</CardTitle>
+                <CardTitle className="text-xl font-bold text-foreground">Important Instructions</CardTitle>
               </div>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-3">
                   <div className="flex items-start gap-3">
-                    <div className="p-1 bg-orange-200 rounded-full mt-1">
-                      <div className="w-2 h-2 bg-orange-600 rounded-full"></div>
+                    <div className="p-1 bg-orange-500/10 rounded-full mt-1">
+                      <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
                     </div>
-                    <p className="text-slate-700">You can only attempt this quiz once</p>
+                    <p className="text-muted-foreground">You can only attempt this quiz once</p>
                   </div>
                   <div className="flex items-start gap-3">
-                    <div className="p-1 bg-orange-200 rounded-full mt-1">
-                      <div className="w-2 h-2 bg-orange-600 rounded-full"></div>
+                    <div className="p-1 bg-orange-500/10 rounded-full mt-1">
+                      <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
                     </div>
-                    <p className="text-slate-700">The timer will start as soon as you begin</p>
+                    <p className="text-muted-foreground">The timer will start as soon as you begin</p>
                   </div>
                   <div className="flex items-start gap-3">
-                    <div className="p-1 bg-orange-200 rounded-full mt-1">
-                      <div className="w-2 h-2 bg-orange-600 rounded-full"></div>
+                    <div className="p-1 bg-orange-500/10 rounded-full mt-1">
+                      <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
                     </div>
-                    <p className="text-slate-700">You cannot pause or restart the quiz</p>
+                    <p className="text-muted-foreground">You cannot pause or restart the quiz</p>
                   </div>
                 </div>
                 <div className="space-y-3">
                   <div className="flex items-start gap-3">
-                    <div className="p-1 bg-orange-200 rounded-full mt-1">
-                      <div className="w-2 h-2 bg-orange-600 rounded-full"></div>
+                    <div className="p-1 bg-orange-500/10 rounded-full mt-1">
+                      <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
                     </div>
-                    <p className="text-slate-700">Ensure stable internet connection throughout</p>
+                    <p className="text-muted-foreground">Ensure stable internet connection throughout</p>
                   </div>
                   <div className="flex items-start gap-3">
-                    <div className="p-1 bg-orange-200 rounded-full mt-1">
-                      <div className="w-2 h-2 bg-orange-600 rounded-full"></div>
+                    <div className="p-1 bg-orange-500/10 rounded-full mt-1">
+                      <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
                     </div>
-                    <p className="text-slate-700">Do not refresh or close the browser during the quiz</p>
+                    <p className="text-muted-foreground">Do not refresh or close the browser during the quiz</p>
                   </div>
                   <div className="flex items-start gap-3">
-                    <div className="p-1 bg-orange-200 rounded-full mt-1">
-                      <div className="w-2 h-2 bg-orange-600 rounded-full"></div>
+                    <div className="p-1 bg-orange-500/10 rounded-full mt-1">
+                      <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
                     </div>
-                    <p className="text-slate-700">Single session enforcement is active</p>
+                    <p className="text-muted-foreground">Single session enforcement is active</p>
                   </div>
                 </div>
               </div>
@@ -326,66 +321,66 @@ function QuizStartContent() {
 
           {/* Features & Benefits */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <Card className="bg-gradient-to-br from-green-100/80 to-emerald-100/80 backdrop-blur-md border-green-300/50 shadow-xl">
+            <Card className="bg-card border-border/50 shadow-lg">
               <CardContent className="p-6 text-center">
-                <div className="p-3 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl w-fit mx-auto mb-4">
-                  <Trophy className="h-6 w-6 text-white" />
+                <div className="p-3 bg-green-500/10 rounded-xl w-fit mx-auto mb-4">
+                  <Trophy className="h-6 w-6 text-green-500" />
                 </div>
-                <h3 className="text-lg font-bold text-slate-800 mb-2">Earn Certificate</h3>
-                <p className="text-slate-600 text-sm">Get a digital certificate for scores above {quiz.passing_score} marks</p>
+                <h3 className="text-lg font-bold text-foreground mb-2">Earn Certificate</h3>
+                <p className="text-muted-foreground text-sm">Get a digital certificate for scores above {quiz.passing_score} marks</p>
               </CardContent>
             </Card>
 
-            <Card className="bg-gradient-to-br from-blue-100/80 to-cyan-100/80 backdrop-blur-md border-blue-300/50 shadow-xl">
+            <Card className="bg-card border-border/50 shadow-lg">
               <CardContent className="p-6 text-center">
-                <div className="p-3 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl w-fit mx-auto mb-4">
-                  <Brain className="h-6 w-6 text-white" />
+                <div className="p-3 bg-blue-500/10 rounded-xl w-fit mx-auto mb-4">
+                  <Brain className="h-6 w-6 text-blue-500" />
                 </div>
-                <h3 className="text-lg font-bold text-slate-800 mb-2">Test Knowledge</h3>
-                <p className="text-slate-600 text-sm">Challenge yourself with {questionCount} carefully crafted questions</p>
+                <h3 className="text-lg font-bold text-foreground mb-2">Test Knowledge</h3>
+                <p className="text-muted-foreground text-sm">Challenge yourself with {questionCount} carefully crafted questions</p>
               </CardContent>
             </Card>
 
-            <Card className="bg-gradient-to-br from-purple-100/80 to-pink-100/80 backdrop-blur-md border-purple-300/50 shadow-xl">
+            <Card className="bg-card border-border/50 shadow-lg">
               <CardContent className="p-6 text-center">
-                <div className="p-3 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl w-fit mx-auto mb-4">
-                  <Shield className="h-6 w-6 text-white" />
+                <div className="p-3 bg-primary/10 rounded-xl w-fit mx-auto mb-4">
+                  <Shield className="h-6 w-6 text-primary" />
                 </div>
-                <h3 className="text-lg font-bold text-slate-800 mb-2">Secure & Fair</h3>
-                <p className="text-slate-600 text-sm">Advanced security measures ensure fair evaluation</p>
+                <h3 className="text-lg font-bold text-foreground mb-2">Secure & Fair</h3>
+                <p className="text-muted-foreground text-sm">Advanced security measures ensure fair evaluation</p>
               </CardContent>
             </Card>
           </div>
 
           {/* Status Section */}
-          <Card className="bg-gradient-to-r from-purple-200/80 via-indigo-200/80 to-cyan-200/80 backdrop-blur-md border-purple-300/50 shadow-xl">
+          <Card className="bg-card border-border/50 shadow-xl">
             <CardContent className="p-8 text-center">
               {isAvailable ? (
                 <div className="space-y-4">
                   <div className="flex items-center justify-center gap-3 mb-4">
-                    <Zap className="h-6 w-6 text-purple-600" />
-                    <h3 className="text-2xl font-bold text-slate-800">Ready to Start?</h3>
+                    <Zap className="h-6 w-6 text-primary" />
+                    <h3 className="text-2xl font-bold text-foreground font-heading">Ready to Start?</h3>
                   </div>
-                  <p className="text-slate-600 text-lg">
-                    You have {quiz.duration_minutes} minutes to complete {questionCount} questions. 
+                  <p className="text-muted-foreground text-lg">
+                    You have {quiz.duration_minutes} minutes to complete {questionCount} questions.
                     Good luck!
                   </p>
-                  <div className="flex items-center justify-center gap-2 text-sm text-slate-500">
+                  <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
                     <Shield className="h-4 w-4" />
                     <span>Your progress is automatically saved</span>
                   </div>
                 </div>
               ) : hasEnded ? (
                 <div className="space-y-4">
-                  <div className="p-4 bg-red-100 rounded-xl border border-red-200">
-                    <AlertCircle className="h-8 w-8 text-red-600 mx-auto mb-2" />
-                    <h3 className="text-xl font-bold text-red-800 mb-2">Quiz Ended</h3>
-                    <p className="text-red-600">This quiz is no longer available</p>
+                  <div className="p-4 bg-destructive/10 rounded-xl border border-destructive/20">
+                    <AlertCircle className="h-8 w-8 text-destructive mx-auto mb-2" />
+                    <h3 className="text-xl font-bold text-destructive mb-2">Quiz Ended</h3>
+                    <p className="text-destructive/80">This quiz is no longer available</p>
                   </div>
                 </div>
               ) : (
                 <div className="space-y-4">
-                  <div className="p-4 bg-yellow-100 rounded-xl border border-yellow-200">
+                  <div className="p-4 bg-yellow-500/10 rounded-xl border border-yellow-500/20">
                     <Clock className="h-8 w-8 text-yellow-600 mx-auto mb-2" />
                     <h3 className="text-xl font-bold text-yellow-800 mb-2">Quiz Not Started</h3>
                     <p className="text-yellow-600">Please wait for the quiz to start</p>
@@ -396,17 +391,17 @@ function QuizStartContent() {
           </Card>
 
           {/* Competition Info */}
-          <Card className="mt-8 bg-gradient-to-r from-purple-200/80 via-indigo-200/80 to-cyan-200/80 backdrop-blur-md border-purple-300/50 shadow-xl">
+          <Card className="mt-8 bg-card border-border/50 shadow-xl">
             <CardContent className="p-6">
               <div className="text-center">
                 <div className="flex items-center justify-center gap-2 mb-4">
-                  <Sparkles className="h-6 w-6 text-purple-600" />
-                  <h3 className="text-xl font-bold text-slate-800">MCCS-QUIZZARDS 2025</h3>
+                  <Sparkles className="h-6 w-6 text-primary" />
+                  <h3 className="text-xl font-bold text-foreground font-heading">MCCS-QUIZZARDS 2025</h3>
                 </div>
-                <p className="text-slate-700 mb-4">
+                <p className="text-muted-foreground mb-4">
                   5th National Level Quiz Competition • October 25-26, 2025
                 </p>
-                <div className="flex flex-wrap justify-center gap-6 text-sm text-slate-600">
+                <div className="flex flex-wrap justify-center gap-6 text-sm text-muted-foreground">
                   <div className="flex items-center gap-2">
                     <Users className="h-4 w-4" />
                     <span>42-hour competition</span>
@@ -432,10 +427,10 @@ function QuizStartContent() {
 // Loading component for Suspense fallback
 function QuizStartLoading() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-100 via-purple-100 to-indigo-200 flex items-center justify-center">
-      <div className="text-slate-800 text-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-2 border-slate-800 border-t-transparent mx-auto mb-4"></div>
-        <p>Loading quiz...</p>
+    <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-2 border-primary border-t-transparent mx-auto mb-4"></div>
+        <p className="text-muted-foreground">Loading quiz...</p>
       </div>
     </div>
   )

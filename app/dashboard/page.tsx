@@ -4,29 +4,17 @@ import { createClient } from "@/lib/supabase/client"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { 
-  FileText, 
-  Award, 
-  TrendingUp, 
-  Clock, 
-  Users, 
-  Target, 
-  Brain, 
-  Zap,
-  BarChart3,
-  PieChart,
-  Activity,
-  Calendar,
+import {
+  Award,
+  TrendingUp,
+  Clock,
+  Target,
   BookOpen,
   Trophy,
-  Star,
   ChevronRight,
-  Eye,
-  Download,
   Phone,
   Sparkles,
-  Timer,
-  Shield
+  Timer
 } from "lucide-react"
 import { useState, useEffect } from "react"
 import Link from "next/link"
@@ -42,7 +30,7 @@ function CountdownTimer() {
 
   useEffect(() => {
     const targetDate = new Date("2025-10-25T06:00:00+05:30") // 6 AM IST on Oct 25, 2025
-    
+
     const updateTimer = () => {
       const now = new Date().getTime()
       const target = targetDate.getTime()
@@ -68,27 +56,27 @@ function CountdownTimer() {
   return (
     <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
       <div className="text-center">
-        <div className="bg-gradient-to-r from-yellow-400 to-orange-400 backdrop-blur-md rounded-xl p-3 border border-yellow-300/50 shadow-lg">
-          <div className="text-2xl sm:text-3xl font-bold text-black mb-1">{timeLeft.days}</div>
-          <div className="text-xs text-black font-medium">Days</div>
+        <div className="bg-primary/10 backdrop-blur-md rounded-xl p-3 border border-primary/20 shadow-sm">
+          <div className="text-2xl sm:text-3xl font-bold text-primary mb-1">{timeLeft.days}</div>
+          <div className="text-xs text-muted-foreground font-medium">Days</div>
         </div>
       </div>
       <div className="text-center">
-        <div className="bg-gradient-to-r from-yellow-400 to-orange-400 backdrop-blur-md rounded-xl p-3 border border-yellow-300/50 shadow-lg">
-          <div className="text-2xl sm:text-3xl font-bold text-black mb-1">{timeLeft.hours}</div>
-          <div className="text-xs text-black font-medium">Hours</div>
+        <div className="bg-primary/10 backdrop-blur-md rounded-xl p-3 border border-primary/20 shadow-sm">
+          <div className="text-2xl sm:text-3xl font-bold text-primary mb-1">{timeLeft.hours}</div>
+          <div className="text-xs text-muted-foreground font-medium">Hours</div>
         </div>
       </div>
       <div className="text-center">
-        <div className="bg-gradient-to-r from-yellow-400 to-orange-400 backdrop-blur-md rounded-xl p-3 border border-yellow-300/50 shadow-lg">
-          <div className="text-2xl sm:text-3xl font-bold text-black mb-1">{timeLeft.minutes}</div>
-          <div className="text-xs text-black font-medium">Minutes</div>
+        <div className="bg-primary/10 backdrop-blur-md rounded-xl p-3 border border-primary/20 shadow-sm">
+          <div className="text-2xl sm:text-3xl font-bold text-primary mb-1">{timeLeft.minutes}</div>
+          <div className="text-xs text-muted-foreground font-medium">Minutes</div>
         </div>
       </div>
       <div className="text-center">
-        <div className="bg-gradient-to-r from-yellow-400 to-orange-400 backdrop-blur-md rounded-xl p-3 border border-yellow-300/50 shadow-lg">
-          <div className="text-2xl sm:text-3xl font-bold text-black mb-1">{timeLeft.seconds}</div>
-          <div className="text-xs text-black font-medium">Seconds</div>
+        <div className="bg-primary/10 backdrop-blur-md rounded-xl p-3 border border-primary/20 shadow-sm">
+          <div className="text-2xl sm:text-3xl font-bold text-primary mb-1">{timeLeft.seconds}</div>
+          <div className="text-xs text-muted-foreground font-medium">Seconds</div>
         </div>
       </div>
     </div>
@@ -111,7 +99,7 @@ export default function StudentDashboard() {
   useEffect(() => {
     const fetchData = async () => {
       const supabase = createClient()
-      
+
       try {
         // Get user
         const { data: { user } } = await supabase.auth.getUser()
@@ -132,7 +120,7 @@ export default function StudentDashboard() {
 
           // Calculate average score
           const attempts = attemptsData.data || []
-          const averageScore = attempts.length > 0 
+          const averageScore = attempts.length > 0
             ? Math.round(attempts.reduce((sum, attempt) => sum + (attempt.score / attempt.total_marks * 100), 0) / attempts.length)
             : 0
 
@@ -148,15 +136,15 @@ export default function StudentDashboard() {
           })
 
           // Get recent attempts
-  const { data: recentAttempts } = await supabase
-    .from("quiz_attempts")
+          const { data: recentAttempts } = await supabase
+            .from("quiz_attempts")
             .select(`
-      *,
-      quiz:quizzes(title)
+              *,
+              quiz:quizzes(title)
             `)
             .eq("student_id", user.id)
-    .order("started_at", { ascending: false })
-    .limit(5)
+            .order("started_at", { ascending: false })
+            .limit(5)
 
           setRecentAttempts(recentAttempts || [])
         }
@@ -172,66 +160,60 @@ export default function StudentDashboard() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-100 via-purple-100 to-indigo-200 flex items-center justify-center">
-        <div className="text-slate-800 text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-2 border-slate-800 border-t-transparent mx-auto mb-4"></div>
-          <p>Loading your dashboard...</p>
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-2 border-primary border-t-transparent mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading your dashboard...</p>
         </div>
       </div>
     )
   }
 
-  const formatTime = (seconds: number) => {
-    const hours = Math.floor(seconds / 3600)
-    const minutes = Math.floor((seconds % 3600) / 60)
-    return hours > 0 ? `${hours}h ${minutes}m` : `${minutes}m`
-  }
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-100 via-purple-100 to-indigo-200 relative overflow-hidden">
-      {/* Animated Background Elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-20 left-10 w-40 h-40 bg-gradient-to-br from-purple-200/30 to-pink-200/30 rounded-full blur-3xl animate-float" />
-        <div className="absolute top-40 right-20 w-32 h-32 bg-gradient-to-br from-cyan-200/30 to-blue-200/30 rounded-full blur-2xl animate-float delay-1000" />
-        <div className="absolute bottom-20 left-1/4 w-48 h-48 bg-gradient-to-br from-yellow-200/30 to-orange-200/30 rounded-full blur-3xl animate-float delay-2000" />
-        <div className="absolute bottom-40 right-1/3 w-36 h-36 bg-gradient-to-br from-green-200/30 to-teal-200/30 rounded-full blur-2xl animate-float delay-3000" />
+    <div className="min-h-screen bg-background relative overflow-hidden">
+      {/* Abstract Background Shapes */}
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10 opacity-30">
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/20 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2" />
+        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-secondary/40 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/2" />
       </div>
 
       <div className="relative z-10 pb-20 sm:pb-8">
-        <div className="p-4 sm:p-6">
+        <div className="p-4 sm:p-6 max-w-7xl mx-auto">
           {/* Welcome Header */}
-          <div className="mb-6">
-            <h1 className="text-2xl sm:text-3xl font-bold text-slate-800 mb-2">
-              Welcome back, {profile?.full_name}!
+          <div className="mb-8">
+            <h1 className="font-heading text-3xl sm:text-4xl font-bold text-foreground mb-2">
+              Welcome back, <span className="text-primary">{profile?.full_name}</span>!
             </h1>
-            <p className="text-slate-600">
+            <p className="text-muted-foreground text-lg">
               {profile?.college}
             </p>
           </div>
+
           {/* Competition Info */}
-          <Card className="bg-gradient-to-r from-purple-300 via-indigo-200 to-cyan-200 backdrop-blur-md border-purple-200/50 shadow-xl mb-6">
-            <CardContent className="p-6">
-              <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+          <Card className="bg-card border-border/50 shadow-xl mb-8 overflow-hidden relative">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+            <CardContent className="p-6 sm:p-8 relative z-10">
+              <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
                 <div className="flex-1">
-                  <Badge className="mb-3 bg-gradient-to-r from-yellow-400 to-orange-400 text-black px-4 py-1 text-sm font-bold">
+                  <Badge className="mb-4 bg-primary/10 text-primary hover:bg-primary/20 border-primary/20 px-4 py-1.5 text-sm font-bold shadow-sm">
                     <Sparkles className="mr-2 h-3 w-3" />
                     5th National Level Quiz Competition
                   </Badge>
-                  <h2 className="text-2xl sm:text-3xl font-bold text-slate-800 mb-2">MCCS-QUIZZARDS 2025</h2>
-                  <p className="text-slate-700 text-sm sm:text-base mb-4">
+                  <h2 className="font-heading text-3xl sm:text-4xl font-bold text-foreground mb-3">MCCS-QUIZZARDS 2025</h2>
+                  <p className="text-muted-foreground text-base sm:text-lg mb-6">
                     October 25-26, 2025 • 6 AM to 12 AM (42 hours)
                   </p>
-                  <div className="flex items-center gap-3 text-slate-600">
-                    <Phone className="h-4 w-4" />
-                    <span className="text-sm">+91 76998 76839</span>
+                  <div className="flex items-center gap-3 text-muted-foreground bg-secondary/30 w-fit px-4 py-2 rounded-lg">
+                    <Phone className="h-4 w-4 text-primary" />
+                    <span className="text-sm font-medium">+91 76998 76839</span>
                   </div>
                 </div>
-                
+
                 {/* Countdown Timer - Right Side */}
-                <div className="lg:ml-8">
+                <div className="lg:ml-8 w-full lg:w-auto">
                   <div className="flex items-center gap-2 mb-4">
-                    <Timer className="h-5 w-5 text-yellow-600" />
-                    <h3 className="text-lg font-semibold text-slate-800">Competition Starts In:</h3>
+                    <Timer className="h-5 w-5 text-primary" />
+                    <h3 className="text-lg font-semibold text-foreground">Competition Starts In:</h3>
                   </div>
                   <CountdownTimer />
                 </div>
@@ -240,159 +222,155 @@ export default function StudentDashboard() {
           </Card>
 
           {/* Stats Grid */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-            <Card className="bg-white/80 backdrop-blur-md border-purple-200/50 shadow-xl">
-              <CardContent className="p-4">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            <Card className="bg-card border-border/50 shadow-lg hover:shadow-xl transition-all duration-300">
+              <CardContent className="p-5">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-slate-600 text-xs font-medium">Attempts</p>
-                    <p className="text-2xl font-bold text-slate-800">{stats.attemptsCount}</p>
+                    <p className="text-muted-foreground text-xs font-medium uppercase tracking-wider mb-1">Attempts</p>
+                    <p className="text-3xl font-heading font-bold text-foreground">{stats.attemptsCount}</p>
                   </div>
-                  <div className="p-2 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg">
-                    <TrendingUp className="h-4 w-4 text-white" />
+                  <div className="p-3 bg-blue-500/10 rounded-xl">
+                    <TrendingUp className="h-5 w-5 text-blue-500" />
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="bg-white/80 backdrop-blur-md border-purple-200/50 shadow-xl">
-              <CardContent className="p-4">
+            <Card className="bg-card border-border/50 shadow-lg hover:shadow-xl transition-all duration-300">
+              <CardContent className="p-5">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-slate-600 text-xs font-medium">Passed</p>
-                    <p className="text-2xl font-bold text-slate-800">{stats.passedCount}</p>
+                    <p className="text-muted-foreground text-xs font-medium uppercase tracking-wider mb-1">Passed</p>
+                    <p className="text-3xl font-heading font-bold text-foreground">{stats.passedCount}</p>
                   </div>
-                  <div className="p-2 bg-gradient-to-br from-green-500 to-emerald-500 rounded-lg">
-                    <Award className="h-4 w-4 text-white" />
+                  <div className="p-3 bg-green-500/10 rounded-xl">
+                    <Award className="h-5 w-5 text-green-500" />
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="bg-white/80 backdrop-blur-md border-purple-200/50 shadow-xl">
-              <CardContent className="p-4">
+            <Card className="bg-card border-border/50 shadow-lg hover:shadow-xl transition-all duration-300">
+              <CardContent className="p-5">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-slate-600 text-xs font-medium">Certificates</p>
-                    <p className="text-2xl font-bold text-slate-800">{stats.certificatesCount}</p>
+                    <p className="text-muted-foreground text-xs font-medium uppercase tracking-wider mb-1">Certificates</p>
+                    <p className="text-3xl font-heading font-bold text-foreground">{stats.certificatesCount}</p>
                   </div>
-                  <div className="p-2 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-lg">
-                    <Trophy className="h-4 w-4 text-white" />
+                  <div className="p-3 bg-yellow-500/10 rounded-xl">
+                    <Trophy className="h-5 w-5 text-yellow-500" />
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="bg-white/80 backdrop-blur-md border-purple-200/50 shadow-xl">
-              <CardContent className="p-4">
+            <Card className="bg-card border-border/50 shadow-lg hover:shadow-xl transition-all duration-300">
+              <CardContent className="p-5">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-slate-600 text-xs font-medium">Avg Score</p>
-                    <p className="text-2xl font-bold text-slate-800">{stats.averageScore}%</p>
+                    <p className="text-muted-foreground text-xs font-medium uppercase tracking-wider mb-1">Avg Score</p>
+                    <p className="text-3xl font-heading font-bold text-foreground">{stats.averageScore}%</p>
                   </div>
-                  <div className="p-2 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg">
-                    <Target className="h-4 w-4 text-white" />
+                  <div className="p-3 bg-primary/10 rounded-xl">
+                    <Target className="h-5 w-5 text-primary" />
                   </div>
                 </div>
               </CardContent>
             </Card>
-      </div>
+          </div>
 
           {/* Recent Activity */}
-          <Card className="bg-white/80 backdrop-blur-md border-purple-200/50 shadow-xl mb-6">
-        <CardHeader>
-              <CardTitle className="text-slate-800 flex items-center gap-2">
-                <Clock className="h-5 w-5" />
+          <Card className="bg-card border-border/50 shadow-xl mb-8">
+            <CardHeader className="border-b border-border/50 pb-4">
+              <CardTitle className="text-foreground flex items-center gap-2 font-heading text-xl">
+                <Clock className="h-5 w-5 text-primary" />
                 Recent Quiz Attempts
               </CardTitle>
-        </CardHeader>
-        <CardContent>
-          {recentAttempts && recentAttempts.length > 0 ? (
+            </CardHeader>
+            <CardContent className="pt-6">
+              {recentAttempts && recentAttempts.length > 0 ? (
                 <div className="space-y-3">
-              {recentAttempts.map((attempt: any) => (
-                    <div key={attempt.id} className="flex items-center justify-between p-3 bg-purple-50/50 rounded-lg border border-purple-100">
-                      <div className="flex items-center gap-3">
-                        <div className="p-2 bg-gradient-to-br from-purple-500 to-indigo-500 rounded-lg">
-                          <BookOpen className="h-4 w-4 text-white" />
+                  {recentAttempts.map((attempt: any) => (
+                    <div key={attempt.id} className="flex items-center justify-between p-4 bg-secondary/20 rounded-xl border border-border/50 hover:bg-secondary/30 transition-colors">
+                      <div className="flex items-center gap-4">
+                        <div className="p-2.5 bg-primary/10 rounded-lg">
+                          <BookOpen className="h-5 w-5 text-primary" />
                         </div>
-                  <div>
-                          <p className="text-slate-800 font-medium text-sm">{attempt.quiz?.title}</p>
-                          <p className="text-slate-600 text-xs">
-                      {attempt.status === "submitted"
-                        ? `Score: ${attempt.score}/${attempt.total_marks}`
-                        : attempt.status.replace("_", " ").toUpperCase()}
-                    </p>
-                  </div>
+                        <div>
+                          <p className="text-foreground font-semibold text-sm sm:text-base mb-0.5">{attempt.quiz?.title}</p>
+                          <p className="text-muted-foreground text-xs sm:text-sm">
+                            {attempt.status === "submitted"
+                              ? `Score: ${attempt.score}/${attempt.total_marks}`
+                              : attempt.status.replace("_", " ").toUpperCase()}
+                          </p>
+                        </div>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <Badge 
+                      <div className="flex flex-col sm:flex-row items-end sm:items-center gap-2 sm:gap-4">
+                        <Badge
                           className={
-                            attempt.passed === true 
-                              ? "bg-green-100 text-green-700 border-green-200 text-xs" 
-                              : attempt.passed === false 
-                              ? "bg-red-100 text-red-700 border-red-200 text-xs"
-                              : "bg-yellow-100 text-yellow-700 border-yellow-200 text-xs"
+                            attempt.passed === true
+                              ? "bg-green-500/10 text-green-600 border-green-500/20"
+                              : attempt.passed === false
+                                ? "bg-red-500/10 text-red-600 border-red-500/20"
+                                : "bg-yellow-500/10 text-yellow-600 border-yellow-500/20"
                           }
                         >
-                      {attempt.passed === true ? "Passed" : attempt.passed === false ? "Failed" : "In Progress"}
+                          {attempt.passed === true ? "Passed" : attempt.passed === false ? "Failed" : "In Progress"}
                         </Badge>
-                        <p className="text-slate-600 text-xs">
+                        <p className="text-muted-foreground text-xs">
                           {new Date(attempt.started_at).toLocaleDateString()}
-                    </p>
-                  </div>
+                        </p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-          ) : (
-                <div className="flex flex-col items-center justify-center py-8">
-                  <div className="p-3 bg-gradient-to-br from-purple-100 to-indigo-100 rounded-full mb-3">
-                    <Clock className="h-6 w-6 text-purple-600" />
+              ) : (
+                <div className="flex flex-col items-center justify-center py-12">
+                  <div className="p-4 bg-secondary/30 rounded-full mb-4">
+                    <Clock className="h-8 w-8 text-muted-foreground" />
                   </div>
-                  <p className="text-slate-800 font-medium mb-1">No quiz attempts yet</p>
-                  <p className="text-slate-600 text-sm text-center mb-4">Start taking quizzes to see your progress here</p>
+                  <p className="text-foreground font-medium mb-1 text-lg">No quiz attempts yet</p>
+                  <p className="text-muted-foreground text-sm text-center mb-6 max-w-xs">Start taking quizzes to see your progress here</p>
                   <Link href="/dashboard/quizzes">
-                    <Button className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white text-sm">
+                    <Button className="bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg shadow-primary/20">
                       <BookOpen className="mr-2 h-4 w-4" />
                       Browse Quizzes
                     </Button>
                   </Link>
-            </div>
-          )}
-        </CardContent>
-      </Card>
+                </div>
+              )}
+            </CardContent>
+          </Card>
 
           {/* Quick Actions */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Link href="/dashboard/quizzes">
-              <Card className="bg-gradient-to-br from-yellow-100 to-amber-100 backdrop-blur-md border-yellow-200/50 shadow-xl hover:shadow-2xl transition-all duration-300 cursor-pointer group">
-                <CardContent className="p-4">
-                  <div className="flex items-center gap-3">
-                    <div className="p-3 bg-gradient-to-br from-purple-500 to-indigo-500 rounded-xl group-hover:scale-110 transition-transform">
-                      <BookOpen className="h-5 w-5 text-white" />
-                    </div>
-                    <div>
-                      <h3 className="text-slate-800 font-semibold text-sm">Browse Quizzes</h3>
-                      <p className="text-slate-600 text-xs">Start new challenges</p>
-                    </div>
-                    <ChevronRight className="h-4 w-4 text-slate-500 ml-auto" />
+              <Card className="bg-card border-border/50 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer group h-full">
+                <CardContent className="p-6 flex items-center gap-4">
+                  <div className="p-4 bg-primary/10 rounded-2xl group-hover:scale-110 transition-transform duration-300">
+                    <BookOpen className="h-6 w-6 text-primary" />
                   </div>
+                  <div>
+                    <h3 className="text-foreground font-heading font-bold text-lg mb-1">Browse Quizzes</h3>
+                    <p className="text-muted-foreground text-sm">Start new challenges</p>
+                  </div>
+                  <ChevronRight className="h-5 w-5 text-muted-foreground ml-auto group-hover:translate-x-1 transition-transform" />
                 </CardContent>
               </Card>
             </Link>
 
             <Link href="/dashboard/certificates">
-              <Card className="bg-gradient-to-br from-green-100 to-emerald-100 backdrop-blur-md border-green-200/50 shadow-xl hover:shadow-2xl transition-all duration-300 cursor-pointer group">
-                <CardContent className="p-4">
-                  <div className="flex items-center gap-3">
-                    <div className="p-3 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl group-hover:scale-110 transition-transform">
-                      <Trophy className="h-5 w-5 text-white" />
-                    </div>
-                    <div>
-                      <h3 className="text-slate-800 font-semibold text-sm">My Certificates</h3>
-                      <p className="text-green-700 text-xs">View achievements</p>
-                    </div>
-                    <ChevronRight className="h-4 w-4 text-green-600 ml-auto" />
+              <Card className="bg-card border-border/50 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer group h-full">
+                <CardContent className="p-6 flex items-center gap-4">
+                  <div className="p-4 bg-yellow-500/10 rounded-2xl group-hover:scale-110 transition-transform duration-300">
+                    <Trophy className="h-6 w-6 text-yellow-500" />
                   </div>
+                  <div>
+                    <h3 className="text-foreground font-heading font-bold text-lg mb-1">My Certificates</h3>
+                    <p className="text-muted-foreground text-sm">View achievements</p>
+                  </div>
+                  <ChevronRight className="h-5 w-5 text-muted-foreground ml-auto group-hover:translate-x-1 transition-transform" />
                 </CardContent>
               </Card>
             </Link>

@@ -6,11 +6,13 @@ SECURITY DEFINER
 SET search_path = public
 AS $$
 BEGIN
-  INSERT INTO public.profiles (id, email, full_name, roll_number, role)
+  INSERT INTO public.profiles (id, email, full_name, college, department, roll_number, role)
   VALUES (
     NEW.id,
     NEW.email,
     COALESCE(NEW.raw_user_meta_data->>'full_name', 'User'),
+    COALESCE(NEW.raw_user_meta_data->>'college', 'Mankar College'),
+    COALESCE(NEW.raw_user_meta_data->>'department', NULL),
     COALESCE(NEW.raw_user_meta_data->>'roll_number', NULL),
     COALESCE(NEW.raw_user_meta_data->>'role', 'student')
   )

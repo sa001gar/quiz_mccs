@@ -1,82 +1,100 @@
 @import "tailwindcss";
-/* Removed broken tw-animate-css import that was causing CSS parsing errors */
 
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Updated to soft purple palette for quiz ambition theme */
+  /* Vibrant & Engaging Light Theme */
   --background: oklch(0.98 0.01 300);
-  --foreground: oklch(0.25 0.02 280);
+  /* Very light lavender tint */
+  --foreground: oklch(0.2 0.05 290);
+  /* Deep purple-black */
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.25 0.02 280);
+  --card-foreground: oklch(0.2 0.05 290);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.25 0.02 280);
-  --primary: oklch(0.55 0.18 285);
-  --primary-foreground: oklch(0.99 0.01 300);
-  --secondary: oklch(0.92 0.04 295);
-  --secondary-foreground: oklch(0.35 0.05 280);
-  --muted: oklch(0.95 0.02 295);
-  --muted-foreground: oklch(0.5 0.05 285);
-  --accent: oklch(0.88 0.08 290);
-  --accent-foreground: oklch(0.35 0.05 280);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.99 0.01 300);
-  --border: oklch(0.9 0.03 295);
-  --input: oklch(0.9 0.03 295);
-  --ring: oklch(0.55 0.18 285);
-  --chart-1: oklch(0.6 0.2 285);
-  --chart-2: oklch(0.65 0.15 270);
-  --chart-3: oklch(0.7 0.12 295);
-  --chart-4: oklch(0.55 0.18 310);
-  --chart-5: oklch(0.75 0.1 280);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.99 0.01 300);
-  --sidebar-foreground: oklch(0.25 0.02 280);
-  --sidebar-primary: oklch(0.55 0.18 285);
-  --sidebar-primary-foreground: oklch(0.99 0.01 300);
-  --sidebar-accent: oklch(0.92 0.04 295);
-  --sidebar-accent-foreground: oklch(0.35 0.05 280);
-  --sidebar-border: oklch(0.9 0.03 295);
-  --sidebar-ring: oklch(0.55 0.18 285);
+  --popover-foreground: oklch(0.2 0.05 290);
+  --primary: oklch(0.5 0.2 290);
+  /* Vibrant Purple */
+  --primary-foreground: oklch(0.98 0.01 300);
+  --secondary: oklch(0.6 0.18 340);
+  /* Vibrant Pink */
+  --secondary-foreground: oklch(0.98 0.01 300);
+  --muted: oklch(0.96 0.02 290);
+  --muted-foreground: oklch(0.5 0.08 290);
+  --accent: oklch(0.93 0.05 290);
+  /* Soft purple accent */
+  --accent-foreground: oklch(0.2 0.05 290);
+  --destructive: oklch(0.6 0.2 20);
+  --destructive-foreground: oklch(0.98 0.01 300);
+  --border: oklch(0.9 0.03 290);
+  --input: oklch(0.9 0.03 290);
+  --ring: oklch(0.5 0.2 290);
+  --radius: 0.75rem;
+  /* Slightly rounder for friendlier look */
+
+  /* Vibrant Chart colors */
+  --chart-1: oklch(0.5 0.2 290);
+  /* Purple */
+  --chart-2: oklch(0.6 0.18 340);
+  /* Pink */
+  --chart-3: oklch(0.6 0.18 240);
+  /* Blue */
+  --chart-4: oklch(0.7 0.18 180);
+  /* Teal */
+  --chart-5: oklch(0.7 0.18 60);
+  /* Orange */
+
+  --sidebar: oklch(0.98 0.01 300);
+  --sidebar-foreground: oklch(0.2 0.05 290);
+  --sidebar-primary: oklch(0.5 0.2 290);
+  --sidebar-primary-foreground: oklch(0.98 0.01 300);
+  --sidebar-accent: oklch(0.93 0.05 290);
+  --sidebar-accent-foreground: oklch(0.2 0.05 290);
+  --sidebar-border: oklch(0.9 0.03 290);
+  --sidebar-ring: oklch(0.5 0.2 290);
 }
 
 .dark {
-  /* Updated dark mode with soft purple tones */
-  --background: oklch(0.15 0.02 285);
-  --foreground: oklch(0.95 0.01 295);
-  --card: oklch(0.18 0.02 285);
-  --card-foreground: oklch(0.95 0.01 295);
-  --popover: oklch(0.18 0.02 285);
-  --popover-foreground: oklch(0.95 0.01 295);
-  --primary: oklch(0.65 0.18 285);
-  --primary-foreground: oklch(0.15 0.02 285);
-  --secondary: oklch(0.25 0.04 290);
-  --secondary-foreground: oklch(0.95 0.01 295);
-  --muted: oklch(0.25 0.04 290);
-  --muted-foreground: oklch(0.65 0.05 285);
-  --accent: oklch(0.3 0.08 285);
-  --accent-foreground: oklch(0.95 0.01 295);
-  --destructive: oklch(0.5 0.2 27);
-  --destructive-foreground: oklch(0.95 0.01 295);
-  --border: oklch(0.25 0.04 290);
-  --input: oklch(0.25 0.04 290);
-  --ring: oklch(0.65 0.18 285);
-  --chart-1: oklch(0.6 0.2 285);
-  --chart-2: oklch(0.65 0.15 270);
-  --chart-3: oklch(0.7 0.12 295);
-  --chart-4: oklch(0.55 0.18 310);
-  --chart-5: oklch(0.75 0.1 280);
-  --sidebar: oklch(0.18 0.02 285);
-  --sidebar-foreground: oklch(0.95 0.01 295);
-  --sidebar-primary: oklch(0.65 0.18 285);
-  --sidebar-primary-foreground: oklch(0.15 0.02 285);
-  --sidebar-accent: oklch(0.25 0.04 290);
-  --sidebar-accent-foreground: oklch(0.95 0.01 295);
-  --sidebar-border: oklch(0.25 0.04 290);
-  --sidebar-ring: oklch(0.65 0.18 285);
+  /* Vibrant & Engaging Dark Theme */
+  --background: oklch(0.15 0.05 280);
+  /* Deep rich purple-black */
+  --foreground: oklch(0.98 0.01 300);
+  --card: oklch(0.2 0.05 280);
+  /* Dark purple-grey */
+  --card-foreground: oklch(0.98 0.01 300);
+  --popover: oklch(0.2 0.05 280);
+  --popover-foreground: oklch(0.98 0.01 300);
+  --primary: oklch(0.65 0.2 290);
+  /* Bright Electric Purple */
+  --primary-foreground: oklch(0.15 0.05 280);
+  --secondary: oklch(0.7 0.18 340);
+  /* Bright Neon Pink */
+  --secondary-foreground: oklch(0.15 0.05 280);
+  --muted: oklch(0.25 0.05 280);
+  --muted-foreground: oklch(0.7 0.05 290);
+  --accent: oklch(0.3 0.1 290);
+  /* Deep Purple Accent */
+  --accent-foreground: oklch(0.98 0.01 300);
+  --destructive: oklch(0.6 0.2 20);
+  --destructive-foreground: oklch(0.98 0.01 300);
+  --border: oklch(0.3 0.05 280);
+  --input: oklch(0.3 0.05 280);
+  --ring: oklch(0.65 0.2 290);
+
+  --sidebar: oklch(0.18 0.05 280);
+  --sidebar-foreground: oklch(0.98 0.01 300);
+  --sidebar-primary: oklch(0.65 0.2 290);
+  --sidebar-primary-foreground: oklch(0.15 0.05 280);
+  --sidebar-accent: oklch(0.3 0.1 290);
+  --sidebar-accent-foreground: oklch(0.98 0.01 300);
+  --sidebar-border: oklch(0.3 0.05 280);
+  --sidebar-ring: oklch(0.65 0.2 290);
 }
 
 @theme inline {
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
+  --font-heading: var(--font-playfair), serif;
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -119,11 +137,12 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
 
-  html{
+  html {
     scroll-behavior: smooth;
   }
 
@@ -213,5 +232,3 @@
     display: none !important;
   }
 }
-
-

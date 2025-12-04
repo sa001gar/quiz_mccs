@@ -2,64 +2,75 @@
 
 import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import Link from "next/link"
 import {
-  Calendar,
   Clock,
-  Phone,
   Sparkles,
-  Award,
   Users,
-  BookOpen,
-  Target,
-  CheckCircle,
-  ArrowRight,
-  Star,
   Zap,
-  Trophy,
   Brain,
-  Code,
-  Gamepad2,
-  Timer,
   Shield,
   Globe,
-  ChevronRight,
-  Play,
-  Download,
-  Info,
   Menu,
   X,
   Mail,
+  Phone,
   MapPin,
-  ExternalLink,
   GraduationCap,
-  Building,
-  Quote,
   Facebook,
   Twitter,
   Instagram,
   Linkedin,
+  ChevronRight,
+  Monitor,
+  CheckCircle,
+  FileCheck,
+  Percent,
+  ArrowRight,
+  Code2,
+  Cpu,
+  Layers,
+  Database,
+  HelpCircle,
+  ChevronDown
 } from "lucide-react"
 
-// Countdown Timer Component
+// --- SUB-COMPONENTS ---
+
+// 1. Infinite Topic Ticker (Marquee Effect)
+function TopicTicker() {
+  const topics = ["Algorithm Design", "Web Development", "Artificial Intelligence", "Database Management", "Cyber Security", "Cloud Computing", "Data Structures", "Operating Systems", "Networking", "Python", "JavaScript", "React & Next.js"]
+
+  return (
+    <div className="w-full bg-indigo-900 border-y border-indigo-800 overflow-hidden py-3 relative z-20">
+      <div className="flex animate-scroll whitespace-nowrap gap-8">
+        {[...topics, ...topics].map((topic, i) => (
+          <div key={i} className="flex items-center gap-2 text-indigo-200 text-sm font-mono uppercase tracking-widest">
+            <Sparkles className="h-3 w-3 text-fuchsia-400" />
+            {topic}
+          </div>
+        ))}
+      </div>
+      <style jsx>{`
+        .animate-scroll { animation: scroll 30s linear infinite; }
+        @keyframes scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+      `}</style>
+    </div>
+  )
+}
+
+// 2. Countdown Timer
 function CountdownTimer() {
-  const [timeLeft, setTimeLeft] = useState({
-    days: 0,
-    hours: 0,
-    minutes: 0,
-    seconds: 0,
-  })
+  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 })
 
   useEffect(() => {
-    const targetDate = new Date("2025-10-25T06:00:00+05:30") // 6 AM IST on Oct 25, 2025
+    // UPDATED DATE
+    const targetDate = new Date("2025-12-15T06:00:00+05:30")
 
     const updateTimer = () => {
       const now = new Date().getTime()
-      const target = targetDate.getTime()
-      const difference = target - now
-
+      const difference = targetDate.getTime() - now
       if (difference > 0) {
         setTimeLeft({
           days: Math.floor(difference / (1000 * 60 * 60 * 24)),
@@ -67,592 +78,522 @@ function CountdownTimer() {
           minutes: Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60)),
           seconds: Math.floor((difference % (1000 * 60)) / 1000),
         })
-      } else {
-        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 })
       }
     }
-
     updateTimer()
     const interval = setInterval(updateTimer, 1000)
     return () => clearInterval(interval)
   }, [])
 
   return (
-    <div className="relative overflow-hidden rounded-3xl  p-8 shadow-2xl border border-purple-500/20">
-      <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-indigo-500/10 to-cyan-500/10" />
-      <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-yellow-400/20 to-orange-400/20 rounded-full blur-3xl animate-pulse" />
-      <div className="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-br from-pink-400/20 to-rose-400/20 rounded-full blur-2xl animate-pulse delay-1000" />
+    <div className="relative overflow-hidden rounded-[2rem] md:rounded-[3rem] p-6 md:p-12 shadow-2xl border border-white/10 bg-slate-900/50 backdrop-blur-xl w-full max-w-5xl mx-auto">
+      {/* Decorative Gradients */}
+      <div className="absolute -top-32 -right-32 w-64 md:w-96 h-64 md:h-96 bg-fuchsia-500/20 rounded-full blur-[80px]" />
+      <div className="absolute -bottom-32 -left-32 w-64 md:w-96 h-64 md:h-96 bg-indigo-500/20 rounded-full blur-[80px]" />
 
-      <div className="relative z-10">
-        <div className="mb-8 text-center">
-          <Badge className="mb-6 bg-gradient-to-r from-yellow-400 to-orange-400 text-black px-6 py-2 text-sm font-bold shadow-lg">
-            <Sparkles className="mr-2 h-4 w-4" />
-            5th National Level Quiz Competition
-          </Badge>
-          <h1 className="text-4xl font-bold text-white sm:text-5xl lg:text-6xl mb-4">
-            MCCS-QUIZZARDS 2025
-          </h1>
-          <p className="text-lg text-purple-100 max-w-2xl mx-auto">
-            Organized by Department of Computer Science, Mankar College, Mankar, Purba Barddhaman Pin - 713144
-          </p>
+      <div className="relative z-10 flex flex-col items-center text-center">
+        <Badge className="mb-6 md:mb-8 bg-gradient-to-r from-indigo-500 to-fuchsia-600 text-white hover:brightness-110 border-0 px-4 py-1 md:px-6 md:py-2 text-xs md:text-sm font-bold shadow-lg shadow-indigo-500/20 rounded-full uppercase tracking-wider">
+          <Sparkles className="mr-2 h-3 w-3 md:h-4 md:w-4 text-yellow-300" />
+          5th National Level Event
+        </Badge>
+
+        <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black text-white tracking-tighter mb-4 drop-shadow-xl leading-none">
+          MCCS<span className="text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-400 to-amber-300">-QUIZZARDS</span>
+        </h1>
+
+        <div className="flex flex-wrap justify-center items-center gap-2 md:gap-3 mb-8 md:mb-12 text-indigo-100/90 font-medium text-sm md:text-xl border border-white/10 bg-black/20 px-4 py-2 md:px-6 md:py-3 rounded-full backdrop-blur-md">
+          <GraduationCap className="h-5 w-5 md:h-6 md:w-6 text-fuchsia-400" />
+          <span>Dept. of Computer Science, Mankar College</span>
         </div>
 
-        <div className="mb-8 text-center">
-          <div className="mb-6 flex items-center justify-center gap-3 text-xl font-bold text-purple-100">
-            <Calendar className="h-6 w-6 text-yellow-400" />
-            October 25-26, 2025
-          </div>
-          <div className="flex items-center justify-center gap-3 text-lg text-purple-200">
-            <Clock className="h-5 w-5 text-cyan-400" />
-            6 AM (25th Oct) to 12 AM (26th Oct)
-          </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6 w-full max-w-4xl mb-8 md:mb-12">
+          {[
+            { label: "Days", value: timeLeft.days },
+            { label: "Hours", value: timeLeft.hours },
+            { label: "Minutes", value: timeLeft.minutes },
+            { label: "Seconds", value: timeLeft.seconds },
+          ].map((item, i) => (
+            <div key={i} className="flex flex-col items-center justify-center bg-black/20 border border-white/10 rounded-2xl p-3 md:p-6 backdrop-blur-md hover:bg-white/5 transition-colors">
+              <span className="text-3xl md:text-6xl font-black text-white font-mono tracking-tight">
+                {String(item.value).padStart(2, '0')}
+              </span>
+              <span className="text-[10px] md:text-sm font-bold text-indigo-200 uppercase tracking-widest mt-1 md:mt-2">{item.label}</span>
+            </div>
+          ))}
         </div>
 
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 mb-8">
-          <div className="rounded-2xl bg-white/10 backdrop-blur-md p-6 text-center border border-white/20">
-            <div className="text-3xl font-bold text-yellow-400 sm:text-4xl mb-2">{timeLeft.days}</div>
-            <div className="text-sm font-semibold text-purple-100">Days</div>
-          </div>
-          <div className="rounded-2xl bg-white/10 backdrop-blur-md p-6 text-center border border-white/20">
-            <div className="text-3xl font-bold text-cyan-400 sm:text-4xl mb-2">{timeLeft.hours}</div>
-            <div className="text-sm font-semibold text-purple-100">Hours</div>
-          </div>
-          <div className="rounded-2xl bg-white/10 backdrop-blur-md p-6 text-center border border-white/20">
-            <div className="text-3xl font-bold text-pink-400 sm:text-4xl mb-2">{timeLeft.minutes}</div>
-            <div className="text-sm font-semibold text-purple-100">Minutes</div>
-          </div>
-          <div className="rounded-2xl bg-white/10 backdrop-blur-md p-6 text-center border border-white/20">
-            <div className="text-3xl font-bold text-green-400 sm:text-4xl mb-2">{timeLeft.seconds}</div>
-            <div className="text-sm font-semibold text-purple-100">Seconds</div>
-          </div>
-        </div>
-
-        <div className="text-center">
-          <div className="mb-4 flex items-center justify-center gap-3 text-lg text-purple-100">
-            <Phone className="h-5 w-5 text-yellow-400" />
-            Contact: +91 76998 76839 | +91 86299 97123
-          </div>
-          <p className="text-sm text-purple-200 mb-6">
-            Visit: quiz.computersciencemancoll.in
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/auth/register">
-              <Button size="lg" className="bg-gradient-to-r from-yellow-400 to-orange-400 hover:from-yellow-500 hover:to-orange-500 text-black px-8 py-3 rounded-xl shadow-lg font-bold">
-                <Users className="mr-2 h-5 w-5" />
-                Register Now
-              </Button>
-            </Link>
-            <Link href="#features">
-              <Button size="lg" variant="outline" className="border-white/30 text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 hover:bg-purple-800 hover:text-white px-8 py-3 rounded-xl font-semibold backdrop-blur-md transition-all">
-                <Info className="mr-2 h-5 w-5" />
-                Know More
-              </Button>
-            </Link>
-            {/* <Link href="/auth/login">
-              <Button size="lg" variant="outline" className="border-white/30 text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 hover:bg-white/10 px-8 py-3 rounded-xl font-semibold backdrop-blur-md">
-                <BookOpen className="mr-2 h-5 w-5" />
-                Login to Dashboard
-              </Button>
-            </Link> */}
-
-          </div>
+        <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto px-4 sm:px-0">
+          <Link href="/auth/register" className="w-full sm:w-auto">
+            <Button size="lg" className="w-full sm:w-auto h-12 md:h-14 px-8 md:px-10 text-base md:text-lg rounded-xl md:rounded-2xl bg-white text-indigo-900 hover:bg-indigo-50 font-extrabold shadow-[0_0_30px_-5px_rgba(255,255,255,0.4)] hover:scale-105 transition-all duration-300">
+              <Users className="mr-2 h-5 w-5" />
+              Register Now
+            </Button>
+          </Link>
+          <Link href="#certification" className="w-full sm:w-auto">
+            <Button size="lg" variant="outline" className="w-full sm:w-auto h-12 md:h-14 px-8 md:px-10 text-base md:text-lg rounded-xl md:rounded-2xl border-white/30 text-white bg-transparent hover:bg-white/10 font-bold backdrop-blur-md transition-all duration-300">
+              <FileCheck className="mr-2 h-5 w-5" />
+              Details
+            </Button>
+          </Link>
         </div>
       </div>
     </div>
   )
 }
 
-// Feature Card Component
-function FeatureCard({ icon: Icon, title, description, color }: {
-  icon: any,
-  title: string,
-  description: string,
-  color: string
-}) {
+// 3. Syllabus Card
+function SyllabusCard({ icon: Icon, title, topics, color }: { icon: any, title: string, topics: string[], color: string }) {
+  const styles: Record<string, string> = {
+    indigo: "border-indigo-200 bg-indigo-50 hover:border-indigo-500",
+    fuchsia: "border-fuchsia-200 bg-fuchsia-50 hover:border-fuchsia-500",
+    amber: "border-amber-200 bg-amber-50 hover:border-amber-500",
+  }
+  const iconColor: Record<string, string> = {
+    indigo: "bg-indigo-600 text-white",
+    fuchsia: "bg-fuchsia-600 text-white",
+    amber: "bg-amber-600 text-white",
+  }
+
   return (
-    <Card className={`border-2 ${color} bg-gradient-to-br from-white/80 to-gray-50/90 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 hover:border-opacity-80`}>
-      <CardContent className="p-6">
-        <div className="flex flex-col items-center text-center">
-          <div className={`flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br ${color.includes('purple') ? 'from-purple-500 to-purple-600' : color.includes('indigo') ? 'from-indigo-500 to-indigo-600' : color.includes('cyan') ? 'from-cyan-500 to-cyan-600' : 'from-pink-500 to-pink-600'} text-white shadow-lg mb-4`}>
-            <Icon className="h-8 w-8" />
-          </div>
-          <h3 className="text-lg font-bold text-gray-800 mb-2">{title}</h3>
-          <p className="text-sm text-gray-600 leading-relaxed">{description}</p>
-        </div>
-      </CardContent>
-    </Card>
+    <div className={`p-6 md:p-8 rounded-2xl border-2 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 ${styles[color]}`}>
+      <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-6 shadow-md ${iconColor[color]}`}>
+        <Icon className="h-6 w-6" />
+      </div>
+      <h3 className="text-xl font-bold text-slate-800 mb-4">{title}</h3>
+      <ul className="space-y-2">
+        {topics.map((t, i) => (
+          <li key={i} className="flex items-center gap-2 text-slate-600 text-sm md:text-base font-medium">
+            <div className={`w-1.5 h-1.5 rounded-full ${color === 'indigo' ? 'bg-indigo-400' : color === 'fuchsia' ? 'bg-fuchsia-400' : 'bg-amber-400'}`} />
+            {t}
+          </li>
+        ))}
+      </ul>
+    </div>
   )
 }
 
-// Step Component
-function StepCard({ number, title, description, icon: Icon, color }: {
-  number: number,
-  title: string,
-  description: string,
-  icon: any,
-  color: string
-}) {
+// 4. FAQ Item
+function FAQItem({ question, answer }: { question: string, answer: string }) {
+  const [isOpen, setIsOpen] = useState(false)
   return (
-    <Card className={`border-2 ${color} bg-gradient-to-br from-white/80 to-gray-50/90 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 hover:border-opacity-80`}>
-      <CardContent className="p-6">
-        <div className="flex items-start gap-4">
-          <div className={`flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${color.includes('purple') ? 'from-purple-500 to-purple-600' : color.includes('indigo') ? 'from-indigo-500 to-indigo-600' : color.includes('cyan') ? 'from-cyan-500 to-cyan-600' : color.includes('pink') ? 'from-pink-500 to-pink-600' : color.includes('rose') ? 'from-rose-500 to-rose-600' : 'from-orange-500 to-orange-600'} text-white shadow-lg`}>
-            <Icon className="h-6 w-6" />
-          </div>
-          <div className="flex-1">
-            <div className="flex items-center gap-3 mb-3">
-              <div className={`flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br ${color.includes('purple') ? 'from-purple-500 to-purple-600' : color.includes('indigo') ? 'from-indigo-500 to-indigo-600' : color.includes('cyan') ? 'from-cyan-500 to-cyan-600' : color.includes('pink') ? 'from-pink-500 to-pink-600' : color.includes('rose') ? 'from-rose-500 to-rose-600' : 'from-orange-500 to-orange-600'} text-white text-sm font-bold`}>
-                {number}
-              </div>
-              <h3 className="text-lg font-bold text-gray-800">{title}</h3>
-            </div>
-            <p className="text-sm text-gray-600 leading-relaxed">{description}</p>
-          </div>
+    <div className="border border-slate-800 rounded-xl bg-slate-900/50 overflow-hidden">
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full flex items-center justify-between p-5 text-left text-slate-100 hover:bg-slate-800/50 transition-colors"
+      >
+        <span className="font-semibold text-lg">{question}</span>
+        <ChevronDown className={`h-5 w-5 text-slate-400 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
+      </button>
+      <div className={`transition-all duration-300 ease-in-out ${isOpen ? 'max-h-48 opacity-100' : 'max-h-0 opacity-0'}`}>
+        <div className="p-5 pt-0 text-slate-400 leading-relaxed border-t border-slate-800/50">
+          {answer}
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   )
 }
 
-// Header Component
+// --- MAIN PAGE SECTIONS ---
+
+// Header
 function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 20)
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  const navItems = ['Home', 'About', 'Topics', 'Certification', 'Guide']
 
   return (
-    <header className="sticky top-0 left-0 right-0 z-50 bg-slate-900/95 backdrop-blur-md border-b border-purple-500/20 shadow-lg">
-      <div className="container mx-auto px-4 sm:px-6">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo and Department Info */}
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-gradient-to-br from-purple-600 to-indigo-600 rounded-xl shadow-lg">
-                <GraduationCap className="h-8 w-8 text-white" />
-              </div>
-              <div>
-                <h1 className="text-xl font-bold text-white">Mankar College</h1>
-                <p className="text-sm text-purple-200">Department of Computer Science</p>
-              </div>
+    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? 'py-2 bg-slate-950/90 backdrop-blur-xl border-b border-white/10 shadow-lg' : 'py-4 md:py-6 bg-transparent'}`}>
+      <div className="container mx-auto px-4 md:px-6">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3 group cursor-pointer">
+            <div className="p-2 md:p-2.5 bg-gradient-to-br from-fuchsia-500 to-indigo-600 rounded-xl shadow-lg group-hover:rotate-12 transition-transform duration-300">
+              <GraduationCap className="h-5 w-5 md:h-6 md:w-6 text-white" />
+            </div>
+            <div>
+              <h1 className="font-bold text-lg md:text-xl text-white tracking-tight leading-none">Mankar College</h1>
+              <p className="text-indigo-200 text-[10px] md:text-xs font-semibold tracking-wide hidden sm:block">Computer Science Dept.</p>
             </div>
           </div>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-8">
-            <Link href="#home" className="text-purple-200 hover:text-white transition-colors">
-              Home
-            </Link>
-            <Link href="#features" className="text-purple-200 hover:text-white transition-colors">
-              Features
-            </Link>
-            <Link href="#testimonials" className="text-purple-200 hover:text-white transition-colors">
-              Testimonials
-            </Link>
-            <Link href="#contact" className="text-purple-200 hover:text-white transition-colors">
-              Contact
-            </Link>
+          {/* Desktop Nav */}
+          <nav className="hidden md:flex items-center gap-1 bg-white/5 p-1.5 rounded-full border border-white/10 backdrop-blur-md">
+            {navItems.map((item) => (
+              <Link key={item} href={`#${item.toLowerCase()}`} className="px-5 py-2 rounded-full text-sm font-semibold text-white/80 hover:bg-white/10 hover:text-white transition-all">
+                {item}
+              </Link>
+            ))}
             <Link href="/auth/register">
-              <Button className="bg-gradient-to-r from-yellow-400 to-orange-400 hover:from-yellow-500 hover:to-orange-500 text-black px-6 py-2 rounded-lg font-semibold">
-                Register Now
+              <Button className="rounded-full px-6 bg-fuchsia-600 hover:bg-fuchsia-700 text-white font-bold ml-2 shadow-lg shadow-fuchsia-500/20">
+                Register
               </Button>
             </Link>
           </nav>
 
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden p-2 text-white hover:text-purple-200 transition-colors"
-          >
-            {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          {/* Mobile Toggle */}
+          <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="md:hidden text-white p-2 bg-white/10 rounded-lg">
+            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
-
-        {/* Mobile Navigation */}
-        {isMenuOpen && (
-          <div className="md:hidden py-4 border-t border-purple-500/20">
-            <nav className="flex flex-col gap-4">
-              <Link href="#home" className="text-purple-200 hover:text-white transition-colors">
-                Home
-              </Link>
-              <Link href="#features" className="text-purple-200 hover:text-white transition-colors">
-                Features
-              </Link>
-              <Link href="#testimonials" className="text-purple-200 hover:text-white transition-colors">
-                Testimonials
-              </Link>
-              <Link href="#contact" className="text-purple-200 hover:text-white transition-colors">
-                Contact
-              </Link>
-              <Link href="/auth/register" className="mt-4">
-                <Button className="w-full bg-gradient-to-r from-yellow-400 to-orange-400 hover:from-yellow-500 hover:to-orange-500 text-black px-6 py-2 rounded-lg font-semibold">
-                  Register Now
-                </Button>
-              </Link>
-            </nav>
-          </div>
-        )}
       </div>
-    </header>
-  )
-}
 
-// Testimonial Component
-function TestimonialCard({ name, role, company, content, rating, avatar, isLarge = false }: {
-  name: string
-  role: string
-  company: string
-  content: string
-  rating: number
-  avatar: string
-  isLarge?: boolean
-}) {
-  return (
-    <Card className={`bg-white/90 backdrop-blur-md border-purple-200/50 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 ${isLarge ? 'md:col-span-2' : ''}`}>
-      <CardContent className="p-6">
-        <div className="flex items-start gap-4">
-          <div className="flex-shrink-0">
-            <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-indigo-500 rounded-full flex items-center justify-center text-white font-bold text-lg">
-              {name.charAt(0)}
-            </div>
-          </div>
-          <div className="flex-1">
-            <div className="flex items-center gap-2 mb-2">
-              {[...Array(rating)].map((_, i) => (
-                <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-              ))}
-            </div>
-            <p className="text-slate-700 mb-4 leading-relaxed">"{content}"</p>
-            <div>
-              <p className="font-semibold text-slate-800">{name}</p>
-              <p className="text-sm text-slate-600">{role}, {company}</p>
-            </div>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
-  )
-}
-
-// Testimonials Section
-function TestimonialsSection() {
-  const testimonials = [
-    {
-      name: "Dr. Priya Sharma",
-      role: "Professor",
-      company: "IIT Delhi",
-      content: "The MCCS-QUIZZARDS platform is incredibly well-designed and user-friendly. The questions are comprehensive and the real-time feedback system is excellent for student learning.",
-      rating: 5,
-      isLarge: true
-    },
-    {
-      name: "Rajesh Kumar",
-      role: "Student",
-      company: "Jadavpur University",
-      content: "Amazing experience! The quiz interface is smooth and the certificate generation feature is fantastic. Highly recommend to all students.",
-      rating: 5
-    },
-    {
-      name: "Dr. Anjali Singh",
-      role: "HOD Computer Science",
-      company: "Calcutta University",
-      content: "Outstanding platform for academic competitions. The anti-cheating measures and professional UI make it a reliable choice for educational institutions.",
-      rating: 5
-    },
-    {
-      name: "Sourav Das",
-      role: "Software Engineer",
-      company: "TCS",
-      content: "The quiz system is robust and the results are instant. Great work by the Mankar College team in creating such a professional platform.",
-      rating: 5
-    },
-    {
-      name: "Dr. Meera Patel",
-      role: "Research Scholar",
-      company: "ISI Kolkata",
-      content: "Excellent user experience with comprehensive question coverage. The platform demonstrates high-quality software development practices.",
-      rating: 5
-    },
-    {
-      name: "Amit Verma",
-      role: "Student",
-      company: "VIT University",
-      content: "The countdown timer and progress tracking features are very helpful. The overall design is modern and engaging.",
-      rating: 5
-    }
-  ]
-
-  return (
-    <section id="testimonials" className="py-16 sm:py-20">
-      <div className="container mx-auto px-4 sm:px-6">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-white sm:text-4xl mb-4">
-            What People Say
-          </h2>
-          <p className="text-lg text-purple-200 max-w-2xl mx-auto">
-            Hear from students, professors, and professionals who have experienced our quiz platform
-          </p>
-        </div>
-
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {testimonials.map((testimonial, index) => (
-            <TestimonialCard
-              key={index}
-              name={testimonial.name}
-              role={testimonial.role}
-              company={testimonial.company}
-              content={testimonial.content}
-              rating={testimonial.rating}
-              avatar=""
-              isLarge={testimonial.isLarge}
-            />
+      {/* Mobile Menu */}
+      {isMenuOpen && (
+        <div className="absolute top-full left-0 w-full bg-slate-950 border-b border-white/10 p-4 flex flex-col gap-2 shadow-2xl md:hidden animate-in slide-in-from-top-5">
+          {navItems.map((item) => (
+            <Link key={item} href={`#${item.toLowerCase()}`} onClick={() => setIsMenuOpen(false)} className="p-4 rounded-xl text-white font-semibold hover:bg-white/5 flex justify-between items-center">
+              {item}
+              <ChevronRight size={16} className="text-slate-600" />
+            </Link>
           ))}
+          <Link href="/auth/register" onClick={() => setIsMenuOpen(false)}>
+            <Button className="w-full mt-2 bg-fuchsia-600 font-bold h-12">Register Now</Button>
+          </Link>
         </div>
-      </div>
-    </section>
+      )}
+    </header>
   )
 }
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-indigo-900 relative overflow-hidden">
-      {/* Header */}
+    <div className="min-h-screen bg-slate-50 text-slate-900 selection:bg-fuchsia-500/30 selection:text-fuchsia-900 overflow-x-hidden font-sans scroll-smooth">
       <Header />
 
-      {/* Animated Background Elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-20 left-10 w-40 h-40 bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-full blur-3xl animate-float" />
-        <div className="absolute top-40 right-20 w-32 h-32 bg-gradient-to-br from-cyan-500/20 to-blue-500/20 rounded-full blur-2xl animate-float delay-1000" />
-        <div className="absolute bottom-20 left-1/4 w-48 h-48 bg-gradient-to-br from-yellow-500/20 to-orange-500/20 rounded-full blur-3xl animate-float delay-2000" />
-        <div className="absolute bottom-40 right-1/3 w-36 h-36 bg-gradient-to-br from-green-500/20 to-teal-500/20 rounded-full blur-2xl animate-float delay-3000" />
-        <div className="absolute top-1/2 left-1/2 w-24 h-24 bg-gradient-to-br from-pink-500/20 to-rose-500/20 rounded-full blur-xl animate-pulse-glow" />
-      </div>
-
-      {/* Main Quiz Announcement */}
-      <section id="home" className="container mx-auto px-4 py-12 sm:px-6 sm:py-16 pt-24">
-        <CountdownTimer />
-      </section>
-
-      {/* Features Section */}
-      <section id="features" className="container mx-auto px-4 py-16 sm:px-6 sm:py-20">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-white sm:text-4xl mb-4">
-            Competition Features
-          </h2>
-          <p className="text-lg text-purple-200">
-            What makes this quiz competition special
-          </p>
+      {/* HERO SECTION */}
+      <section id="home" className="relative min-h-[90vh] md:min-h-screen pt-28 pb-20 flex flex-col items-center justify-center overflow-hidden bg-[#0F172A]">
+        {/* Animated Background */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-900/40 via-[#0F172A] to-[#0F172A]" />
+          <svg className="absolute inset-0 w-full h-full opacity-[0.05]" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <pattern id="hero-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                <path d="M0 40L40 0H20L0 20M40 40V20L20 40" stroke="white" strokeWidth="1" fill="none" />
+              </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#hero-grid)" />
+          </svg>
         </div>
 
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-          <FeatureCard
-            icon={Timer}
-            title="42-Hour Window"
-            description="Flexible timing from 6 AM to 12 AM for maximum participation"
-            color="border-purple-100"
-          />
-          <FeatureCard
-            icon={Award}
-            title="Certificates"
-            description="Download certificates for 60%+ scores to showcase your achievement"
-            color="border-indigo-100"
-          />
-          <FeatureCard
-            icon={Zap}
-            title="Instant Results"
-            description="Get immediate feedback on your performance with detailed analytics"
-            color="border-cyan-100"
-          />
-          <FeatureCard
-            icon={Brain}
-            title="Diverse Questions"
-            description="Questions from General Knowledge, Literature, History and many more subjects"
-            color="border-pink-100"
-          />
+        <div className="container mx-auto px-4 md:px-6 relative z-10 w-full">
+          <CountdownTimer />
         </div>
-      </section>
 
-      {/* How to Participate */}
-      <section className="bg-gradient-to-r from-purple-800/20 via-indigo-800/20 to-cyan-800/20 py-16 sm:py-20">
-        <div className="container mx-auto px-4 sm:px-6">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-white sm:text-4xl mb-4">
-              How to Participate
-            </h2>
-            <p className="text-lg text-purple-200 max-w-2xl mx-auto">
-              Follow these simple steps to join the 5th National Level Quiz Competition
-            </p>
-          </div>
-
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            <StepCard
-              number={1}
-              title="Log on to the Platform"
-              description="Visit quiz.computersciencemancoll.in from 25th Oct 6:00AM to 26th Oct 11:59PM"
-              icon={Globe}
-              color="border-purple-100"
-            />
-            <StepCard
-              number={2}
-              title="Register Yourself"
-              description="Create your account with valid credentials and complete your profile"
-              icon={Users}
-              color="border-indigo-100"
-            />
-            <StepCard
-              number={3}
-              title="Start the Quiz"
-              description="On the dashboard, click start quiz to begin the single comprehensive quiz"
-              icon={BookOpen}
-              color="border-cyan-100"
-            />
-            <StepCard
-              number={4}
-              title="Complete the Quiz"
-              description="Don't close the quiz window or change tabs before finishing to avoid auto-submission"
-              icon={Shield}
-              color="border-pink-100"
-            />
-            <StepCard
-              number={5}
-              title="Check Results"
-              description="View your results from the result section on your dashboard after completion"
-              icon={Trophy}
-              color="border-rose-100"
-            />
-            <StepCard
-              number={6}
-              title="Download Certificate"
-              description="Get your certificate from the result section if you score 60% or above marks"
-              icon={Download}
-              color="border-orange-100"
-            />
+        {/* Scroll Indicator */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 text-white/30 animate-bounce hidden md:block">
+          <div className="flex flex-col items-center gap-2">
+            <span className="text-[10px] uppercase tracking-widest">Scroll Down</span>
+            <ChevronDown />
           </div>
         </div>
       </section>
 
-      {/* Testimonials Section */}
-      <TestimonialsSection />
+      <TopicTicker />
 
-      {/* Department Showcase Section */}
-      <section className="bg-gradient-to-r from-purple-800/20 via-indigo-800/20 to-cyan-800/20 py-16 sm:py-20">
-        <div className="container mx-auto px-4 sm:px-6">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-white sm:text-4xl mb-4">
-              About Our Department
-            </h2>
-            <p className="text-lg text-purple-200 max-w-2xl mx-auto">
-              Empowering students with cutting-edge computer science education and innovative learning experiences
-            </p>
-          </div>
-
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-            <Card className="bg-white/90 backdrop-blur-md border-purple-200/50 shadow-xl">
-              <CardContent className="p-6 text-center">
-                <div className="p-3 bg-gradient-to-br from-purple-600 to-indigo-600 rounded-xl w-fit mx-auto mb-4">
-                  <GraduationCap className="h-8 w-8 text-white" />
-                </div>
-                <h3 className="text-xl font-bold text-slate-800 mb-2">Excellence in Education</h3>
-                <p className="text-slate-600">Providing world-class computer science education with modern curriculum and experienced faculty.</p>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-white/90 backdrop-blur-md border-purple-200/50 shadow-xl">
-              <CardContent className="p-6 text-center">
-                <div className="p-3 bg-gradient-to-br from-cyan-600 to-blue-600 rounded-xl w-fit mx-auto mb-4">
-                  <Code className="h-8 w-8 text-white" />
-                </div>
-                <h3 className="text-xl font-bold text-slate-800 mb-2">Innovation & Technology</h3>
-                <p className="text-slate-600">Embracing latest technologies and fostering innovation through hands-on learning experiences.</p>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-white/90 backdrop-blur-md border-purple-200/50 shadow-xl">
-              <CardContent className="p-6 text-center">
-                <div className="p-3 bg-gradient-to-br from-green-600 to-teal-600 rounded-xl w-fit mx-auto mb-4">
-                  <Users className="h-8 w-8 text-white" />
-                </div>
-                <h3 className="text-xl font-bold text-slate-800 mb-2">Student Success</h3>
-                <p className="text-slate-600">Committed to student success with comprehensive support and career guidance programs.</p>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer id="contact" className="border-t border-purple-500/20 bg-slate-900/95 backdrop-blur supports-[backdrop-filter]:bg-slate-900/60">
-        <div className="container mx-auto px-4 py-12 sm:px-6">
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-            {/* Department Info */}
-            <div className="lg:col-span-2">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="p-2 bg-gradient-to-br from-purple-600 to-indigo-600 rounded-xl shadow-lg">
-                  <GraduationCap className="h-8 w-8 text-white" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold text-white">Mankar College</h3>
-                  <p className="text-purple-200">Department of Computer Science</p>
-                </div>
-              </div>
-              <p className="text-purple-200 mb-4 max-w-md">
-                Empowering students with cutting-edge computer science education and fostering innovation through technology.
+      {/* ABOUT SECTION (New) */}
+      <section id="about" className="py-20 md:py-32 bg-white relative">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <Badge variant="outline" className="mb-6 border-fuchsia-200 text-fuchsia-700 bg-fuchsia-50 px-4 py-1.5 rounded-full text-sm font-bold uppercase tracking-wide">
+                About The Event
+              </Badge>
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 mb-6 leading-tight">
+                Igniting the <br /><span className="text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-600 to-indigo-600">Tech Spark</span>
+              </h2>
+              <p className="text-lg md:text-xl text-slate-600 mb-6 leading-relaxed">
+                MCCS-QUIZZARDS is not just a quiz; it is a celebration of logic, code, and innovation. Organized by the Department of Computer Science, this national-level event aims to bring together the brightest minds to test their technical mettle.
               </p>
-              <div className="flex gap-4">
-                <a href="#" className="p-2 bg-purple-600/20 rounded-lg hover:bg-purple-600/30 transition-colors">
-                  <Facebook className="h-5 w-5 text-purple-200" />
-                </a>
-                <a href="#" className="p-2 bg-purple-600/20 rounded-lg hover:bg-purple-600/30 transition-colors">
-                  <Twitter className="h-5 w-5 text-purple-200" />
-                </a>
-                <a href="#" className="p-2 bg-purple-600/20 rounded-lg hover:bg-purple-600/30 transition-colors">
-                  <Instagram className="h-5 w-5 text-purple-200" />
-                </a>
-                <a href="#" className="p-2 bg-purple-600/20 rounded-lg hover:bg-purple-600/30 transition-colors">
-                  <Linkedin className="h-5 w-5 text-purple-200" />
-                </a>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <div className="flex items-center gap-3 p-4 bg-slate-50 rounded-xl border border-slate-100">
+                  <Users className="text-fuchsia-600 h-6 w-6" />
+                  <div>
+                    <div className="font-bold text-slate-900">Open For All</div>
+                    <div className="text-sm text-slate-500">UG/PG Students</div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3 p-4 bg-slate-50 rounded-xl border border-slate-100">
+                  <Monitor className="text-indigo-600 h-6 w-6" />
+                  <div>
+                    <div className="font-bold text-slate-900">Virtual Mode</div>
+                    <div className="text-sm text-slate-500">Participate from anywhere</div>
+                  </div>
+                </div>
               </div>
             </div>
 
-            {/* Quick Links */}
+            {/* Visual Representation of Code */}
+            <div className="relative group">
+              <div className="absolute inset-0 bg-gradient-to-r from-fuchsia-500 to-indigo-500 rounded-3xl blur-2xl opacity-20 group-hover:opacity-30 transition-opacity" />
+              <div className="relative bg-slate-900 rounded-3xl p-6 md:p-8 border border-slate-800 shadow-2xl">
+                <div className="flex items-center gap-2 mb-6 border-b border-slate-800 pb-4">
+                  <div className="w-3 h-3 rounded-full bg-red-500" />
+                  <div className="w-3 h-3 rounded-full bg-yellow-500" />
+                  <div className="w-3 h-3 rounded-full bg-green-500" />
+                  <span className="ml-4 text-xs font-mono text-slate-500">quiz_logic.py</span>
+                </div>
+                <div className="font-mono text-sm md:text-base space-y-2 text-slate-300">
+                  <p><span className="text-fuchsia-400">class</span> <span className="text-yellow-300">Quizzard</span>:</p>
+                  <p className="pl-4"><span className="text-indigo-400">def</span> <span className="text-blue-300">__init__</span>(self, participant):</p>
+                  <p className="pl-8">self.participant = participant</p>
+                  <p className="pl-8">self.skills = [<span className="text-green-400">"Logic"</span>, <span className="text-green-400">"Code"</span>]</p>
+                  <br />
+                  <p className="pl-4"><span className="text-indigo-400">def</span> <span className="text-blue-300">evaluate</span>(self):</p>
+                  <p className="pl-8"><span className="text-fuchsia-400">if</span> self.score {'>'} 60:</p>
+                  <p className="pl-12"><span className="text-fuchsia-400">return</span> <span className="text-green-400">"Certified Excellence"</span></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* SYLLABUS / TOPICS SECTION (New) */}
+      <section id="topics" className="py-20 md:py-32 bg-slate-50 border-y border-slate-200">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="text-center max-w-3xl mx-auto mb-16 md:mb-20">
+            <Badge variant="outline" className="mb-4 border-indigo-200 text-indigo-700 bg-indigo-50 px-4 py-1.5 rounded-full text-sm font-bold uppercase tracking-wide">
+              The Challenge
+            </Badge>
+            <h2 className="text-3xl md:text-5xl font-black text-slate-900 mb-6">
+              What to <span className="text-indigo-600">Expect?</span>
+            </h2>
+            <p className="text-slate-600 text-lg">
+              The quiz is designed to test holistic computer science knowledge.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            <SyllabusCard
+              icon={Brain}
+              title="Core Logic & Aptitude"
+              topics={["Pattern Recognition", "Logical Reasoning", "Data Interpretation", "Computational Thinking"]}
+              color="indigo"
+            />
+            <SyllabusCard
+              icon={Code2}
+              title="Programming Concepts"
+              topics={["C/C++ / Python Syntax", "Object Oriented Programming", "Data Structures", "Algorithm Analysis"]}
+              color="fuchsia"
+            />
+            <SyllabusCard
+              icon={Cpu}
+              title="Technical GK & Trends"
+              topics={["Current Tech Trends", "AI & ML Basics", "Computer Hardware", "Famous Tech Personalities"]}
+              color="amber"
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* CERTIFICATION SECTION */}
+      <section id="certification" className="py-20 md:py-32 bg-[#0F172A] relative overflow-hidden">
+        {/* Abstract Background */}
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-emerald-500/10 rounded-full blur-[120px]" />
+        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-indigo-500/10 rounded-full blur-[120px]" />
+
+        <div className="container mx-auto px-4 md:px-6 relative z-10">
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+
+            {/* Visual Side */}
+            <div className="relative order-2 lg:order-1">
+              <div className="absolute -inset-4 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-[2.5rem] blur-lg opacity-30" />
+              <div className="relative bg-slate-900 border border-slate-700 rounded-[2rem] p-6 md:p-12 overflow-hidden shadow-2xl transform hover:scale-[1.02] transition-transform duration-500">
+                {/* Mock Certificate Visual */}
+                <div className="flex flex-col items-center text-center border-4 border-double border-slate-700 p-6 md:p-10 rounded-xl bg-slate-800/50">
+                  <div className="w-16 h-16 md:w-20 md:h-20 bg-amber-100 rounded-full flex items-center justify-center mb-6 shadow-lg shadow-amber-500/20">
+                    <FileCheck className="h-8 w-8 md:h-10 md:w-10 text-amber-600" />
+                  </div>
+                  <h3 className="text-xl md:text-3xl font-serif text-amber-100 mb-2">Certificate of Achievement</h3>
+                  <p className="text-slate-400 mb-6 md:mb-8 text-sm md:text-base">Presented to <span className="text-white font-bold border-b border-slate-600 pb-1">You</span></p>
+                  <div className="w-full bg-slate-700/50 rounded-full h-12 md:h-14 flex items-center justify-between px-6 mb-4">
+                    <span className="text-slate-300 font-mono text-xs md:text-sm tracking-widest">CRITERIA</span>
+                    <span className="text-emerald-400 font-bold font-mono text-lg md:text-2xl">&gt; 60%</span>
+                  </div>
+                  <div className="flex items-center gap-2 mt-2">
+                    <CheckCircle className="h-4 w-4 text-emerald-500" />
+                    <p className="text-[10px] md:text-xs text-slate-500 uppercase tracking-widest">Verified by Mankar College</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Content Side */}
+            <div className="order-1 lg:order-2">
+              <Badge className="mb-6 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-4 py-1.5 font-bold uppercase tracking-wide">
+                Certification Criteria
+              </Badge>
+              <h2 className="text-3xl md:text-5xl font-black text-white mb-6 leading-tight">
+                Earn Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300">National Level</span> Credential
+              </h2>
+              <p className="text-lg text-slate-400 mb-8 leading-relaxed">
+                Recognition is key to professional growth. Every participant who demonstrates proficiency by clearing the qualifying threshold will be awarded a verifiable E-Certificate.
+              </p>
+
+              <div className="space-y-6">
+                <div className="flex gap-4 items-start">
+                  <div className="p-3 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 mt-1 shrink-0">
+                    <Percent className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <h4 className="text-xl font-bold text-white mb-1">Score Above 60%</h4>
+                    <p className="text-slate-400">You must secure a minimum score of 60% in the quiz to automatically qualify for the certificate.</p>
+                  </div>
+                </div>
+
+                <div className="flex gap-4 items-start">
+                  <div className="p-3 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 mt-1 shrink-0">
+                    <CheckCircle className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <h4 className="text-xl font-bold text-white mb-1">Instant Generation</h4>
+                    <p className="text-slate-400">Qualified participants can download their certificate instantly from the dashboard upon submission.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ SECTION (New) */}
+      <section id="faq" className="py-20 md:py-32 bg-[#0B1120] border-t border-white/5">
+        <div className="container mx-auto px-4 md:px-6 max-w-4xl">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-black text-white mb-4">Frequently Asked Questions</h2>
+            <p className="text-slate-400">Everything you need to know about MCCS-QUIZZARDS</p>
+          </div>
+
+          <div className="space-y-4">
+            <FAQItem
+              question="Is there a registration fee?"
+              answer="No, MCCS-QUIZZARDS is completely free for all students. Our goal is to promote technical learning."
+            />
+            <FAQItem
+              question="Who is eligible to participate?"
+              answer="Any student currently pursuing an undergraduate or postgraduate degree in any stream (B.Tech, BCA, B.Sc, MCA, etc.) can participate."
+            />
+            <FAQItem
+              question="Can I take the quiz on my mobile?"
+              answer="Yes! The platform is fully responsive and optimized for mobile devices, tablets, and desktops."
+            />
+            <FAQItem
+              question="What happens if my internet disconnects?"
+              answer="Don't worry. Your answers are auto-saved. You can resume exactly where you left off within the allotted time window."
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* GUIDE SECTION */}
+      <section id="guide" className="py-20 md:py-32 bg-white">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="flex flex-col lg:flex-row gap-16 items-center">
+
+            {/* Left Content */}
+            <div className="lg:w-1/3 text-center lg:text-left">
+              <Badge className="mb-6 bg-fuchsia-100 text-fuchsia-700 hover:bg-fuchsia-200 border-none px-4 py-1.5 font-bold">Process</Badge>
+              <h2 className="text-4xl font-black text-slate-900 mb-6 leading-tight">
+                Simple Steps to <br /><span className="text-fuchsia-600">Get Certified</span>
+              </h2>
+              <p className="text-slate-600 text-lg mb-8 leading-relaxed">
+                We have kept the process frictionless so you can focus entirely on your preparation.
+              </p>
+              <Link href="/auth/register">
+                <Button size="lg" className="rounded-xl bg-slate-900 text-white hover:bg-slate-800 shadow-xl w-full sm:w-auto">
+                  Start Registration <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
+            </div>
+
+            {/* Right Steps Grid */}
+            <div className="lg:w-2/3 grid sm:grid-cols-2 gap-6 w-full">
+              {[
+                { n: "01", t: "Register", d: "Create account with valid college ID.", i: Users },
+                { n: "02", t: "Log In", d: "Access dashboard on Dec 15.", i: Globe },
+                { n: "03", t: "Compete", d: "Answer questions & cross 60%.", i: Zap },
+                { n: "04", t: "Download", d: "Get your certificate instantly.", i: FileCheck },
+              ].map((step, idx) => (
+                <div key={idx} className="flex gap-5 p-6 rounded-2xl border border-slate-100 bg-white shadow-lg shadow-slate-200/50 hover:shadow-xl hover:border-indigo-100 transition-all">
+                  <div className="flex-shrink-0">
+                    <span className="flex items-center justify-center w-12 h-12 rounded-xl bg-indigo-50 text-indigo-700 font-bold text-lg border border-indigo-100">
+                      {step.n}
+                    </span>
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-lg text-slate-800 mb-1">{step.t}</h4>
+                    <p className="text-sm text-slate-500 font-medium leading-relaxed">{step.d}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* FOOTER */}
+      <footer id="contact" className="bg-slate-950 text-slate-300 pt-24 pb-8 border-t border-slate-900">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="grid md:grid-cols-4 gap-12 mb-16">
+            <div className="md:col-span-2">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="p-2 bg-indigo-600 rounded-lg">
+                  <GraduationCap className="h-6 w-6 text-white" />
+                </div>
+                <span className="text-2xl font-bold text-white tracking-tight">Mankar College</span>
+              </div>
+              <p className="text-slate-400 leading-relaxed mb-8 max-w-sm text-sm">
+                Empowering the next generation of tech leaders through innovation, competition, and academic excellence.
+              </p>
+              <div className="flex gap-4">
+                {[Facebook, Twitter, Instagram, Linkedin].map((Icon, i) => (
+                  <a key={i} href="#" className="p-3 bg-slate-900 rounded-full hover:bg-indigo-600 hover:text-white transition-all duration-300 border border-slate-800">
+                    <Icon className="h-5 w-5" />
+                  </a>
+                ))}
+              </div>
+            </div>
+
             <div>
-              <h4 className="text-lg font-semibold text-white mb-4">Quick Links</h4>
-              <ul className="space-y-2">
-                <li><Link href="#home" className="text-purple-200 hover:text-white transition-colors">Home</Link></li>
-                <li><Link href="/know-more" className="text-purple-200 hover:text-white transition-colors">Know More</Link></li>
-                <li><Link href="#testimonials" className="text-purple-200 hover:text-white transition-colors">Testimonials</Link></li>
-                <li><Link href="/auth/register" className="text-purple-200 hover:text-white transition-colors">Register</Link></li>
-                <li><Link href="/auth/login" className="text-purple-200 hover:text-white transition-colors">Login</Link></li>
+              <h4 className="text-white font-bold text-lg mb-6">Quick Links</h4>
+              <ul className="space-y-4 text-sm">
+                {['Home', 'About', 'Topics', 'Certification', 'Register'].map((item) => (
+                  <li key={item}>
+                    <Link href={`#${item.toLowerCase()}`} className="hover:text-fuchsia-400 transition-colors flex items-center gap-2">
+                      <ChevronRight className="h-3 w-3" /> {item}
+                    </Link>
+                  </li>
+                ))}
               </ul>
             </div>
 
-            {/* Contact Info */}
             <div>
-              <h4 className="text-lg font-semibold text-white mb-4">Contact Info</h4>
-              <div className="space-y-3">
-                <div className="flex items-center gap-3">
-                  <MapPin className="h-5 w-5 text-purple-400" />
-                  <span className="text-purple-200 text-sm">Mankar, Purba Barddhaman<br />Pin - 713144, West Bengal</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Phone className="h-5 w-5 text-purple-400" />
-                  <span className="text-purple-200 text-sm">+91 76998 76839</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Mail className="h-5 w-5 text-purple-400" />
-                  <span className="text-purple-200 text-sm">support@computersciencemancoll.in</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Globe className="h-5 w-5 text-purple-400" />
-                  <a href="https://quiz.computersciencemancoll.in" className="text-purple-200 text-sm hover:text-white transition-colors flex items-center gap-1">
-                    quiz.computersciencemancoll.in
-                    <ExternalLink className="h-3 w-3" />
-                  </a>
-                </div>
-              </div>
+              <h4 className="text-white font-bold text-lg mb-6">Contact Us</h4>
+              <ul className="space-y-4 text-sm">
+                <li className="flex items-start gap-3">
+                  <MapPin className="h-5 w-5 text-indigo-500 mt-1 shrink-0" />
+                  <span>Mankar, Purba Barddhaman<br />West Bengal, 713144</span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <Phone className="h-5 w-5 text-indigo-500 shrink-0" />
+                  <span>+91 76998 76839</span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <Mail className="h-5 w-5 text-indigo-500 shrink-0" />
+                  <span>deptcs@mankarcollege.ac.in</span>
+                </li>
+              </ul>
             </div>
           </div>
 
-          <div className="mt-12 border-t border-purple-500/20 pt-8 text-center text-sm text-purple-300">
-            <p>&copy; 2025 Mankar College - Department of Computer Science. All rights reserved.</p>
-            <p className="mt-2">MCCS-QUIZZARDS 2025 - 5th National Level Quiz Competition</p>
+          <div className="border-t border-slate-900 pt-8 text-center text-xs md:text-sm text-slate-600">
+            <p>&copy; 2025 Mankar College Department of Computer Science. All rights reserved.</p>
           </div>
         </div>
       </footer>
